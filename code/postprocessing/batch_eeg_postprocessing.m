@@ -10,8 +10,8 @@ clear;
 clc;
 
 %% modular execution flags
-run_grand_averages = true;      % step 1: make grand averages
-run_difference_waves = true;    % step 2: compute difference waves  
+run_grand_averages = false;      % step 1: make grand averages
+run_difference_waves = false;    % step 2: compute difference waves  
 run_electrode_clusters = true;  % step 3: find electrode clusters
 
 % if running steps 2/3 without step 1, existing files will be loaded automatically
@@ -75,7 +75,6 @@ diff_waves_table = [
 
 fprintf('defined %d difference wave computations\n', size(diff_waves_table, 1))
 
-cluster_size = 3; % nr of electrodes in cluster, values from 1 to 5 are permissible
 ern_time_window = [0, 100];
 pe_time_window = [200, 500];
 
@@ -135,7 +134,7 @@ if run_electrode_clusters
     fprintf('identifying fronto-central (Ne/ERN) & centroparietal (Pe) electrode clusters\n');
     
     % function call
-    electrode_clusters = find_electrode_clusters(difference_waves, output_dir, cluster_size, ern_time_window, pe_time_window);
+    electrode_clusters = find_electrode_clusters(difference_waves, output_dir, ern_time_window, pe_time_window);
     
     fprintf('step 3 completed: electrode clusters identified\n');
 end
