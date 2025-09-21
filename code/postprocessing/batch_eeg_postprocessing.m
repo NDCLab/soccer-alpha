@@ -47,8 +47,8 @@ rt_outlier_threshold = 3; % standard deviations, set to 0 if no outlier trimming
 save_individual_averages = true; % save individual subject averages per condition
 
 % paths & directories
-main_dir = 'C:/Users/localadmin/Documents/08_SocCEr/soccer-dataset';
-processed_data_dir = fullfile(main_dir, 'derivatives/preprocessed/s1_r1/eeg');
+main_dir = 'C:/Users/localadmin/Documents/08_SocCEr/soccer-alpha';
+processed_data_dir = fullfile(main_dir, 'input/preprocessed/s1_r1/eeg');
 output_dir = fullfile(main_dir, 'derivatives/postprocessed/erp/resp-locked');
 
 % create output directory if it doesn't exist
