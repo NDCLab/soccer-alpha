@@ -10,8 +10,8 @@ clear;
 clc;
 
 %% modular execution flags
-run_grand_averages = false;      % step 1: make grand averages
-run_difference_waves = false;    % step 2: compute difference waves  
+run_grand_averages = true;      % step 1: make grand averages
+run_difference_waves = true;    % step 2: compute difference waves  
 run_electrode_clusters = true;  % step 3: find electrode clusters
 
 % if running steps 2/3 without step 1, existing files will be loaded automatically
@@ -19,7 +19,7 @@ run_electrode_clusters = true;  % step 3: find electrode clusters
 %% user input: define subject list & important codes
 
 % slash-separated string of subject IDs to be processed in this run
-subjects_to_process = "390011";
+subjects_to_process = "390001/390002/390003/390004/390005/390006/390007/390008/390009/390010/390011/390012/390013/390014/390015/390020/390021/390023/390024/390025/390026/390027/390028/390030/390031/390032/390033/390034/390036/390037/390038/390039";
 
 % convert subjects string to cell array
 subjects_list = string(split(subjects_to_process, "/"));
