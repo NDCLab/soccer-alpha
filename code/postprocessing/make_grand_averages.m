@@ -44,14 +44,12 @@ grand_avg_dir = fullfile(output_dir, 'grand_averages');
 if save_individual_averages
     if ~exist(individual_dir, 'dir')
         mkdir(individual_dir);
-        fprintf('created individual averages directory: %s\n', individual_dir);
     end
 end
 
 % create grand averages directory
 if ~exist(grand_avg_dir, 'dir')
     mkdir(grand_avg_dir);
-    fprintf('created grand averages directory: %s\n', grand_avg_dir);
 end
 
 %% stage 1: process each subject & create individual averages
@@ -71,11 +69,10 @@ for subj_idx = 1:length(subjects)
         continue;
     end
     
-    % load preprocessed EEG data
-    fprintf('loading EEG data from: %s\n', data_file);
+    % load preprocessed EEG data quietly
     try
-        subject_EEG = pop_loadset(data_file);
-        subject_EEG = eeg_checkset(subject_EEG);
+        evalc('subject_EEG = pop_loadset(data_file);');
+        evalc('subject_EEG = eeg_checkset(subject_EEG);');
         
         % ensure epoch field exists for RT processing
         if ~isfield(subject_EEG, 'epoch') || isempty(subject_EEG.epoch)
@@ -121,72 +118,76 @@ for subj_idx = 1:length(subjects)
         % initialize data arrays for each code
         for code = codes
             code_str = sprintf('code_%d', code);
-            individual_averages.(code_str) = [];
+            individual_averages.(code_str) = zeros(subject_EEG.nbchan, subject_EEG.pnts, length(subjects));
         end
     end
     
-    % check epochs per code & create individual averages
+    % initialize subject as potential candidate
     meets_epochs_threshold = true;
     
-    for code = codes
-        code_str = sprintf('code_%d', code);
+    % collect trial info strings for compact output
+    trial_info_strings = {};
+    
+    for code_idx = 1:length(codes)
+        code = codes(code_idx);
         
-        % find epochs with this code
+        % find epochs for this code
         epoch_indices = find([subject_EEG.epoch.beh_code] == code);
         
-        % apply RT trimming & get statistics
-        [cleaned_epochs, trial_stats] = trim_rt_outliers_with_stats(subject_EEG, epoch_indices, rt_lower_bound, rt_outlier_threshold);
-        
-        % store statistics
-        processing_stats.(subject_clean).(code_str) = trial_stats;
-        
-        fprintf('  code %d: %d → %d epochs', code, trial_stats.original, length(cleaned_epochs));
-        
-        if length(cleaned_epochs) < min_epochs_threshold
-            fprintf(' (< %d threshold)\n', min_epochs_threshold);
+        if isempty(epoch_indices)
+            processing_stats.(subject_clean).(sprintf('code_%d', code)) = struct('original', 0, 'after_rt_min', 0, 'after_outliers', 0, 'final', 0);
+            trial_info_strings{end+1} = sprintf('code %d: 0 epochs', code);
             meets_epochs_threshold = false;
+            continue;
+        end
+        
+        % apply RT trimming
+        [cleaned_epochs, trial_stats] = trim_rt_outliers_with_stats(subject_EEG, epoch_indices, rt_lower_bound, rt_outlier_threshold);
+        processing_stats.(subject_clean).(sprintf('code_%d', code)) = trial_stats;
+        
+        % create trial info string
+        if trial_stats.original > trial_stats.final
+            trial_info_strings{end+1} = sprintf('code %d: %d → %d epochs', code, trial_stats.original, trial_stats.final);
         else
-            % create individual average for this code
-            if ~isempty(cleaned_epochs)
-                code_average = mean(subject_EEG.data(:, :, cleaned_epochs), 3); % average across epochs
-            else
-                code_average = zeros(subject_EEG.nbchan, length(subject_EEG.times));
-            end
+            trial_info_strings{end+1} = sprintf('code %d: %d epochs', code, trial_stats.final);
+        end
+        
+        % check minimum epochs threshold
+        if length(cleaned_epochs) < min_epochs_threshold
+            meets_epochs_threshold = false;
+        end
+        
+        % average epochs for this code
+        if ~isempty(cleaned_epochs)
+            code_str = sprintf('code_%d', code);
+            averaged_data = mean(subject_EEG.data(:, :, cleaned_epochs), 3);
+            individual_averages.(code_str)(:, :, subj_idx) = averaged_data;
             
-            % initialize individual averages array if this is the first subject with data
-            if isempty(individual_averages.(code_str))
-                individual_averages.(code_str) = [];
-            end
-            individual_averages.(code_str)(:, :, end+1) = code_average; % [channels x timepoints x subjects]
-            
-            fprintf('  code %d: averaged %d cleaned epochs\n', code, length(cleaned_epochs));
-            
-            % save individual average if requested
+            % save individual average if requested (quietly)
             if save_individual_averages
-                % create EEG structure for this individual average
+                filename = sprintf('individualAVG_%s_%d_%s', subject, code, code_names(code));
+                
                 individual_EEG = eeg_emptyset();
-                individual_EEG.data = code_average;
+                individual_EEG.data = averaged_data;
                 individual_EEG.times = subject_EEG.times;
                 individual_EEG.chanlocs = subject_EEG.chanlocs;
                 individual_EEG.srate = subject_EEG.srate;
                 individual_EEG.nbchan = subject_EEG.nbchan;
-                individual_EEG.pnts = length(subject_EEG.times);
+                individual_EEG.pnts = subject_EEG.pnts;
                 individual_EEG.trials = 1;
-                individual_EEG.xmin = subject_EEG.times(1) / 1000;
-                individual_EEG.xmax = subject_EEG.times(end) / 1000;
-                
-                % set filename & save
-                filename = sprintf('individualAVG_%s_%d_%s', subject, code, code_names(code));
+                individual_EEG.xmin = subject_EEG.xmin;
+                individual_EEG.xmax = subject_EEG.xmax;
                 individual_EEG.setname = filename;
                 individual_EEG.filename = [filename '.set'];
                 
-                individual_EEG = eeg_checkset(individual_EEG);
-                pop_saveset(individual_EEG, 'filename', [filename '.set'], 'filepath', individual_dir);
-                
-                fprintf('    saved individual average: %s\n', filename);
+                evalc('individual_EEG = eeg_checkset(individual_EEG);');
+                evalc('pop_saveset(individual_EEG, ''filename'', [filename ''.set''], ''filepath'', individual_dir);');
             end
         end
     end
+    
+    % print compact trial counts
+    fprintf('%s\n', strjoin(trial_info_strings, '  '));
     
     % check if subject meets all inclusion criteria
     if meets_epochs_threshold
@@ -198,7 +199,7 @@ for subj_idx = 1:length(subjects)
     
 end % end subject loop
 
-%% stage 2: create grand averages (FIXED VERSION WITH LOGGING)
+%% stage 2: create grand averages
 
 fprintf('\n=== STAGE 2: GRAND AVERAGE CREATION ===\n');
 
@@ -341,10 +342,9 @@ fprintf(log_fid, '=== FILE OUTPUTS ===\n');
 % save .mat file with all data in grand_averages subdirectory
 mat_file = fullfile(grand_avg_dir, 'grand_averages.mat');
 save(mat_file, 'grand_averages', 'included_subjects', 'codes');
-fprintf('saved .mat file: %s\n', mat_file);
 fprintf(log_fid, 'saved .mat file: %s\n', mat_file);
 
-% save individual .set/.fdt files for each code in grand_averages subdirectory
+% save individual .set/.fdt files for each code in grand_averages subdirectory (quietly)
 fprintf(log_fid, 'saved .set/.fdt files:\n');
 for code = codes
     code_str = sprintf('code_%d', code);
@@ -366,10 +366,9 @@ for code = codes
         code_EEG.setname = filename;
         code_EEG.filename = [filename '.set'];
         
-        code_EEG = eeg_checkset(code_EEG);
-        pop_saveset(code_EEG, 'filename', [filename '.set'], 'filepath', grand_avg_dir);
+        evalc('code_EEG = eeg_checkset(code_EEG);');
+        evalc('pop_saveset(code_EEG, ''filename'', [filename ''.set''], ''filepath'', grand_avg_dir);');
         
-        fprintf('saved .set/.fdt files: %s\n', filename);
         fprintf(log_fid, '  - %s.set/.fdt\n', filename);
     end
 end
@@ -379,23 +378,12 @@ fprintf(log_fid, '\n=== PROCESSING COMPLETED ===\n');
 fprintf(log_fid, 'end time: %s\n', datestr(now));
 fclose(log_fid);
 
-fprintf('\ndetailed log saved to: %s\n', log_file);
-fprintf('\n===========================\n');
+fprintf('===========================\n');
 
 end
 
 function [cleaned_epochs, trial_stats] = trim_rt_outliers_with_stats(EEG, epoch_indices, rt_lower_bound, rt_outlier_threshold)
 % trim_rt_outliers_with_stats - remove epochs based on RT criteria & track statistics
-%
-% inputs:
-%   EEG - EEG structure
-%   epoch_indices - indices of epochs for this condition
-%   rt_lower_bound - minimum RT in ms (0 = disabled)
-%   rt_outlier_threshold - SD threshold for outliers (0 = disabled)
-%
-% outputs:
-%   cleaned_epochs - indices of epochs after RT trimming
-%   trial_stats - struct with trial counts at each stage
 
 % initialize statistics
 trial_stats = struct();
@@ -420,9 +408,6 @@ if rt_lower_bound > 0
     % ensure too_fast is a column vector to match keep_epochs
     too_fast = (epoch_rts < rt_lower_bound)';
     keep_epochs = keep_epochs & ~too_fast;
-    if sum(too_fast) > 0
-        fprintf(' (removed %d trials < %d ms)', sum(too_fast), rt_lower_bound);
-    end
 end
 
 % track count after RT minimum trimming
@@ -443,10 +428,6 @@ if rt_outlier_threshold > 0 && sum(keep_epochs) > 1 % need at least 2 trials for
     
     % set these outlier epochs to false in the main keep_epochs vector
     keep_epochs(outlier_original_indices) = false;
-    
-    if sum(outliers_in_subset) > 0
-        fprintf(' (removed %d outlier trials)', sum(outliers_in_subset));
-    end
 end
 
 % track final count after outlier removal
