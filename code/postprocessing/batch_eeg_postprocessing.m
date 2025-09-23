@@ -69,7 +69,10 @@ save_individual_averages = true; % save individual subject averages per conditio
 
 % paths & directories
 main_dir = 'C:/Users/localadmin/Documents/08_SocCEr/soccer-alpha';
-processed_data_dir = fullfile(main_dir, 'input/preprocessed/s1_r1/eeg');
+preprocessed_path_file = fullfile(main_dir, 'input/preprocessed');
+preprocessed_path = strtrim(fileread(preprocessed_path_file));
+processed_data_dir = fullfile(preprocessed_path, 's1_r1/eeg');
+
 today_str = datestr(now, 'yyyy-mm-dd');
 output_dir = fullfile(main_dir, 'derivatives', [today_str '_erp-postprocessing']);
 
