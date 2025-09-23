@@ -89,18 +89,19 @@ for subj_idx = 1:length(subjects)
     % process each code for this subject
     subject_clean = strrep(subject, '-', '_'); % for struct field names
     processing_stats.(subject_clean) = struct();
-    
+
     % calculate overall accuracy for inclusion check
     all_codes_in_data = [subject_EEG.epoch.beh_code];
-    total_epochs = length(all_codes_in_data);
-    correct_codes = [111, 211]; % visible correct trials
-    correct_epochs = sum(ismember(all_codes_in_data, correct_codes));
-    overall_accuracy = correct_epochs / total_epochs;
+    visible_target_codes = [111, 112, 113, 211, 212, 213]; % visible condition trials
+    visible_target_epochs = sum(ismember(all_codes_in_data, visible_target_codes));
+    visible_error_codes = [112, 113, 212, 213]; % visible FE & NFE both conditions
+    visible_error_epochs = sum(ismember(all_codes_in_data, visible_error_codes));
+    overall_accuracy = 1 - (visible_error_epochs / visible_target_epochs);
     
-    processing_stats.(subject_clean).total_epochs = total_epochs;
+    processing_stats.(subject_clean).total_epochs = visible_target_epochs;
     processing_stats.(subject_clean).overall_accuracy = overall_accuracy;
     
-    fprintf('overall accuracy: %.1f%% (%d/%d correct trials)\n', overall_accuracy * 100, correct_epochs, total_epochs);
+    fprintf('overall accuracy: %.1f%% (%d/%d visible trials)\n', overall_accuracy * 100, visible_target_epochs - visible_error_epochs, visible_target_epochs);
     
     % check accuracy inclusion criterion
     if overall_accuracy < min_accuracy_threshold
