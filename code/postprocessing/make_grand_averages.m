@@ -88,7 +88,18 @@ for subj_idx = 1:length(subjects)
     
     % process each code for this subject
     subject_clean = strrep(subject, '-', '_'); % for struct field names
-    processing_stats.(subject_clean) = struct();
+
+    % count excluded trial types (responseType 7 & 8)
+    all_response_types = [subject_EEG.epoch.trial_responseType];
+    multiple_key_count = sum(all_response_types == 7);
+    too_slow_count = sum(all_response_types == 8);
+
+    % store in processing_stats
+    processing_stats.(subject_clean).multiple_key_trials = multiple_key_count;
+    processing_stats.(subject_clean).too_slow_trials = too_slow_count;
+    processing_stats.(subject_clean).total_epochs_raw = subject_EEG.trials;
+
+    fprintf('  excluded trials: %d multiple key, %d too slow\n', multiple_key_count, too_slow_count);
 
     % calculate overall accuracy for inclusion check
     all_codes_in_data = [subject_EEG.epoch.beh_code];
@@ -106,6 +117,15 @@ for subj_idx = 1:length(subjects)
     % check accuracy inclusion criterion
     if overall_accuracy < min_accuracy_threshold
         fprintf('EXCLUDED: accuracy %.1f%% < threshold %.1f%%\n', overall_accuracy * 100, min_accuracy_threshold * 100);
+        
+        % still collect stats for excluded subjects (for table generation)
+        for code = codes
+            code_field = sprintf('code_%d', code);
+            if ~isfield(processing_stats.(subject_clean), code_field)
+                processing_stats.(subject_clean).(code_field) = struct('original', 0, 'after_rt_min', 0, 'after_outliers', 0, 'final', 0);
+            end
+        end
+        
         continue;
     end
     
@@ -342,7 +362,7 @@ fprintf(log_fid, '=== FILE OUTPUTS ===\n');
 
 % save .mat file with all data in grand_averages subdirectory
 mat_file = fullfile(grand_avg_dir, 'grand_averages.mat');
-save(mat_file, 'grand_averages', 'included_subjects', 'codes');
+save(mat_file, 'grand_averages', 'included_subjects', 'codes', 'processing_stats');
 fprintf(log_fid, 'saved .mat file: %s\n', mat_file);
 
 % save individual .set/.fdt files for each code in grand_averages subdirectory (quietly)

@@ -40,7 +40,7 @@ run_electrode_clusters = true;  % step 3: find electrode clusters
 %% user input: define subject list & important codes
 
 % slash-separated string of subject IDs to be processed in this run
-subjects_to_process = "390001/390002/390003/390004/390005/390006/390007/390008/390009/390010/390011/390012/390013/390014/390015/390020/390021/390023/390024/390025/390026/390027/390028/390030/390031/390032/390033/390034/390036/390037/390038/390039/390040";
+subjects_to_process = "390001/390002/390003/390004/390005/390006/390007/390008/390009/390010/390011/390012/390013/390014/390015/390020/390021/390022/390023/390024/390025/390026/390027/390028/390030/390031/390032/390033/390034/390036/390037/390038/390039/390040";
 
 % convert subjects string to cell array
 subjects_list = string(split(subjects_to_process, "/"));
@@ -166,6 +166,12 @@ if run_grand_averages
     processing_report.step1.inclusion_rate = length(included_subjects) / length(subjects);
     
     fprintf('step 1 completed: %d/%d subjects included\n', length(included_subjects), length(subjects));
+
+    %% generate subject summary table
+    if run_grand_averages
+        loaded_data = load(fullfile(output_dir, 'grand_averages', 'grand_averages.mat'));
+        generate_subject_summary_table(loaded_data.processing_stats, loaded_data.included_subjects, loaded_data.codes, output_dir);
+    end
     
 else
     % load existing grand averages if not running step 1
