@@ -184,15 +184,5 @@ Verify correct implementation:
 4. verify secondary codes show variable subject counts
 5. check difference wave subject counts ≤ minimum of component conditions
 
-## Contact
-
-Questions regarding pipeline or inclusion criteria: Marlene Buch
-
-## References
-
-- MADE Pipeline: Debnath, R., et al. (2020). The Maryland analysis of developmental EEG (MADE) pipeline. *Psychophysiology*, 57(6), e13580
-- Two-stage averaging: based on best practices for ERP analysis ensuring appropriate subject-level and group-level averaging
-
----
 
 *Documentation current as of October 11, 2025. For implementation details, refer to inline code comments in MATLAB scripts*
