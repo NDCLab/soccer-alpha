@@ -31,16 +31,16 @@ fprintf('console output logged to: %s\n', console_log_file);
 fprintf('============================================\n\n');
 
 %% modular execution flags
-run_grand_averages = true;      % step 1: make grand averages
+run_grand_averages = false;      % step 1: make grand averages
 run_difference_waves = true;    % step 2: compute difference waves  
-run_electrode_clusters = true;  % step 3: find electrode clusters
+run_electrode_clusters = false;  % step 3: find electrode clusters
 
 % if running steps 2/3 without step 1, existing files will be loaded automatically
 
 %% user input: define subject list & important codes
 
 % slash-separated string of subject IDs to be processed in this run
-subjects_to_process = "390001/390002/390003/390004/390005/390006/390007/390008/390009/390010/390011/390012/390013/390014/390015/390020/390021/390022/390023/390024/390025/390026/390027/390028/390030/390031/390032/390033/390034/390036/390037/390038/390039/390040/390041/390042";
+subjects_to_process = "390002/390003/390004/390005/390006/390007/390008/390009/390010/390011/390012/390013/390014/390015/390020/390021/390022/390023/390024/390025/390026/390027/390028/390030/390031/390032/390033/390034/390036/390037/390038/390039/390041/390042";
 
 % convert subjects string to cell array
 subjects_list = string(split(subjects_to_process, "/"));
@@ -57,7 +57,7 @@ code_names = containers.Map([111, 112, 113, 102, 104, 211, 212, 213, 202, 204], 
      'nonsoc-vis-corr', 'nonsoc-vis-FE', 'nonsoc-vis-NFE', 'nonsoc-invis-FE', 'nonsoc-invis-NFG'});
 
 % inclusion thresholds
-min_epochs_threshold = 1;
+min_epochs_threshold = 10;
 min_accuracy_threshold = 0.6;
 
 % RT trimming parameters
@@ -170,7 +170,7 @@ if run_grand_averages
     % generate subject summary table
     fprintf('\ngenerating subject summary table...\n');
     grand_avg_data = load(grand_avg_file);
-    generate_subject_summary_table(grand_avg_data.processing_stats, included_subjects, codes, output_dir);
+    generate_subject_summary_table(grand_avg_data.processing_stats, included_subjects, codes, output_dir, grand_avg_data.condition_inclusion);
     
 else
     % load existing grand averages if not running step 1
@@ -196,7 +196,8 @@ if run_difference_waves
     fprintf('computing %d difference waves\n', size(diff_waves_table, 1));
     
     % function call
-    difference_waves = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir);
+    grand_avg_data = load(grand_avg_file);
+    [difference_waves] = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, grand_avg_data.condition_inclusion, codes);
     
     step2_end_time = datetime('now');
     

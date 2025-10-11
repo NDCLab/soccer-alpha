@@ -1,4 +1,4 @@
-function generate_subject_summary_table(processing_stats, included_subjects, codes, output_dir)
+function generate_subject_summary_table(processing_stats, included_subjects, codes, output_dir, condition_inclusion)
 % generate tab-separated summary table for all subjects
 % creates table matching format from google doc for easy copy-paste
 %
@@ -40,22 +40,22 @@ for subj_idx = 1:length(all_subjects)
     subject_clean = all_subjects{subj_idx};
     subject = strrep(subject_clean, '_', '-');  % convert back to original format
     subject_id = strrep(subject, 'sub-', '');
-    
+
     % skip if no processing stats available
     if ~isfield(processing_stats, subject_clean)
         continue;
     end
-    
+
     stats = processing_stats.(subject_clean);
-    
+
     % extract basic info
     overall_acc = stats.overall_accuracy * 100;
-    
+
     % get total raw epochs & excluded trial counts
     total_epochs_raw = stats.total_epochs_raw;
     multiple_key_trials = stats.multiple_key_trials;
     too_slow_trials = stats.too_slow_trials;
-    
+
     % calculate total epochs loaded (sum of original across all analyzed codes)
     total_epochs = 0;
     for code = column_order
@@ -64,28 +64,28 @@ for subj_idx = 1:length(all_subjects)
             total_epochs = total_epochs + stats.(code_field).original;
         end
     end
-    
+
     % collect trial counts & removal statistics for each code
     code_data = struct();
     total_rt_min_removed = 0;  % trials removed due to RT < 150ms
     total_outliers_removed = 0;  % trials removed due to > 3SD per condition
     total_usable = 0;  % final trials after all removal
-    
+
     for code = column_order
         code_field = sprintf('code_%d', code);
-        
+
         if isfield(stats, code_field)
             code_stats = stats.(code_field);
-            
+
             % store final count for this code
             code_data.(code_field).final = code_stats.final;
             total_usable = total_usable + code_stats.final;
-            
+
             % calculate rt minimum removal for this code
             % (original trials - trials after rt minimum)
             rt_min_removed_this_code = code_stats.original - code_stats.after_rt_min;
             total_rt_min_removed = total_rt_min_removed + rt_min_removed_this_code;
-            
+
             % calculate outlier removal for this code
             % outliers are calculated PER CODE (within-condition):
             % for each code separately, calculate mean & SD of RT
@@ -97,47 +97,74 @@ for subj_idx = 1:length(all_subjects)
             code_data.(code_field).final = 0;
         end
     end
-    
+
     % calculate removal percentages (denominator: total raw epochs)
     multiple_key_pct = (multiple_key_trials / total_epochs_raw) * 100;
     too_slow_pct = (too_slow_trials / total_epochs_raw) * 100;
     rt_min_removal_pct = (total_rt_min_removed / total_epochs_raw) * 100;
     outlier_removal_pct = (total_outliers_removed / total_epochs_raw) * 100;
-    
+
     % calculate sum columns for error conditions
     soc_vis_err = code_data.code_112.final + code_data.code_113.final;
     nonsoc_vis_err = code_data.code_212.final + code_data.code_213.final;
-    
+
     % find lowest trial count across all codes
     all_counts = [code_data.code_111.final, code_data.code_112.final, code_data.code_113.final, ...
-                  code_data.code_102.final, code_data.code_104.final, ...
-                  code_data.code_211.final, code_data.code_212.final, code_data.code_213.final, ...
-                  code_data.code_202.final, code_data.code_204.final];
+        code_data.code_102.final, code_data.code_104.final, ...
+        code_data.code_211.final, code_data.code_212.final, code_data.code_213.final, ...
+        code_data.code_202.final, code_data.code_204.final];
     lowest_trial_count = min(all_counts(all_counts > 0));
     if isempty(lowest_trial_count)
         lowest_trial_count = 0;
     end
-    
+
     % write data row
     fprintf(fid, '%s\t', subject_id);
-    fprintf(fid, '\t');  % status (blank)
-    fprintf(fid, '\t');  % exclusion reason (blank)
+
+    % determine status & exclusion reason
+    if ismember(subject, included_subjects)
+        fprintf(fid, 'included\t');
+        fprintf(fid, '\t');  % no exclusion reason
+    else
+        fprintf(fid, 'excluded\t');
+        % determine exclusion reason from stats
+        if overall_acc < 60
+            fprintf(fid, 'accuracy < 60%%\t');
+        else
+            % must be primary condition failure
+            primary_codes = [102, 104, 202, 204];
+            failed_primary = [];
+            for code = primary_codes
+                code_field = sprintf('code_%d', code);
+                if isfield(stats, code_field) && stats.(code_field).final < 10
+                    failed_primary = [failed_primary, code];
+                end
+            end
+            if ~isempty(failed_primary)
+                failed_str = sprintf('%d, ', failed_primary);
+                failed_str = failed_str(1:end-2);
+                fprintf(fid, 'primary codes < 10: %s\t', failed_str);
+            else
+                fprintf(fid, 'unknown\t');
+            end
+        end
+    end
     fprintf(fid, '%.1f%% (%d/%d)\t', overall_acc, round(overall_acc * total_epochs / 100), total_epochs);
     fprintf(fid, '%d\t', total_epochs_raw);
-    
+
     % write exclusion statistics
     fprintf(fid, '%d\t', multiple_key_trials);
     fprintf(fid, '%.2f%%\t', multiple_key_pct);
     fprintf(fid, '%d\t', too_slow_trials);
     fprintf(fid, '%.2f%%\t', too_slow_pct);
-    
+
     % write removal statistics
     fprintf(fid, '%d\t', total_rt_min_removed);
     fprintf(fid, '%.2f%%\t', rt_min_removal_pct);
     fprintf(fid, '%d\t', total_outliers_removed);
     fprintf(fid, '%.2f%%\t', outlier_removal_pct);
     fprintf(fid, '%d\t', total_usable);
-    
+
     % write code counts in table order with sum columns inserted
     fprintf(fid, '%d\t', code_data.code_111.final);  % 111
     fprintf(fid, '%d\t', code_data.code_112.final);  % 112
@@ -151,7 +178,7 @@ for subj_idx = 1:length(all_subjects)
     fprintf(fid, '%d\t', nonsoc_vis_err);  % sum nonsoc-vis-err
     fprintf(fid, '%d\t', code_data.code_202.final);  % 202
     fprintf(fid, '%d\t', code_data.code_204.final);  % 204
-    
+
     % write lowest trial count
     fprintf(fid, '%d\n', lowest_trial_count);
 end

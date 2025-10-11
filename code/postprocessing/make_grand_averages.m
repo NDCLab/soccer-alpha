@@ -54,6 +54,13 @@ end
 
 %% stage 1: process each subject & create individual averages
 
+% define primary hypothesis codes - subjects must have >= min_epochs_threshold in ALL of these
+primary_codes = [102, 104, 202, 204];
+
+% track which subjects have sufficient data for each code
+% rows = subjects, columns = codes
+condition_inclusion = containers.Map('KeyType', 'char', 'ValueType', 'any');
+
 fprintf('\n=== STAGE 1: INDIVIDUAL SUBJECT PROCESSING ===\n');
 
 for subj_idx = 1:length(subjects)
@@ -135,16 +142,18 @@ for subj_idx = 1:length(subjects)
         individual_averages.chanlocs = subject_EEG.chanlocs;
         individual_averages.srate = subject_EEG.srate;
         individual_averages.nbchan = subject_EEG.nbchan;
-        
-        % initialize data arrays for each code
+
+        % don't pre-allocate - we'll build dynamically for included subjects only
         for code = codes
             code_str = sprintf('code_%d', code);
-            individual_averages.(code_str) = zeros(subject_EEG.nbchan, subject_EEG.pnts, length(subjects));
+            individual_averages.(code_str) = [];
         end
     end
-    
-    % initialize subject as potential candidate
-    meets_epochs_threshold = true;
+
+    % check primary hypothesis codes first (all-or-nothing for dataset inclusion)
+    primary_codes = [102, 104, 202, 204];
+    passes_primary_check = true;
+    failed_primary_codes = [];
     
     % collect trial info strings for compact output
     trial_info_strings = {};
@@ -158,7 +167,11 @@ for subj_idx = 1:length(subjects)
         if isempty(epoch_indices)
             processing_stats.(subject_clean).(sprintf('code_%d', code)) = struct('original', 0, 'after_rt_min', 0, 'after_outliers', 0, 'final', 0);
             trial_info_strings{end+1} = sprintf('code %d: 0 epochs', code);
-            meets_epochs_threshold = false;
+            % check if this is a primary code
+            if ismember(code, primary_codes)
+                passes_primary_check = false;
+                failed_primary_codes = [failed_primary_codes, code];
+            end
             continue;
         end
         
@@ -172,17 +185,20 @@ for subj_idx = 1:length(subjects)
         else
             trial_info_strings{end+1} = sprintf('code %d: %d epochs', code, trial_stats.final);
         end
-        
+
         % check minimum epochs threshold
         if length(cleaned_epochs) < min_epochs_threshold
-            meets_epochs_threshold = false;
+            % check if this is a primary code
+            if ismember(code, primary_codes)
+                passes_primary_check = false;
+                failed_primary_codes = [failed_primary_codes, code];
+            end
         end
         
         % average epochs for this code
         if ~isempty(cleaned_epochs)
             code_str = sprintf('code_%d', code);
             averaged_data = mean(subject_EEG.data(:, :, cleaned_epochs), 3);
-            individual_averages.(code_str)(:, :, subj_idx) = averaged_data;
             
             % save individual average if requested (quietly)
             if save_individual_averages
@@ -209,13 +225,52 @@ for subj_idx = 1:length(subjects)
     
     % print compact trial counts
     fprintf('%s\n', strjoin(trial_info_strings, '  '));
-    
-    % check if subject meets all inclusion criteria
-    if meets_epochs_threshold
+
+    % check if subject meets primary inclusion criteria
+    if passes_primary_check
         included_subjects{end+1} = subject;
         fprintf('INCLUDED: %s (accuracy: %.1f%%)\n', subject, overall_accuracy * 100);
+
+        % track which codes this subject has sufficient data for
+        subject_code_inclusion = false(1, length(codes)); % initialize as all false
+        for code_idx = 1:length(codes)
+            code = codes(code_idx);
+            code_field = sprintf('code_%d', code);
+            if isfield(processing_stats.(subject_clean), code_field)
+                % check if final count >= threshold
+                if processing_stats.(subject_clean).(code_field).final >= min_epochs_threshold
+                    subject_code_inclusion(code_idx) = true;
+                end
+            end
+        end
+        % store this subject's code inclusion pattern
+        condition_inclusion(subject) = subject_code_inclusion;
+
+        % add subject data to individual_averages structure
+        for code_idx = 1:length(codes)
+            code = codes(code_idx);
+            code_str = sprintf('code_%d', code);
+            code_field = sprintf('code_%d', code);
+
+            % check if subject has data for this code
+            if isfield(processing_stats.(subject_clean), code_field) && processing_stats.(subject_clean).(code_field).final > 0
+                % find epochs & compute average
+                epoch_indices = find([subject_EEG.epoch.beh_code] == code);
+                [cleaned_epochs, ~] = trim_rt_outliers_with_stats(subject_EEG, epoch_indices, rt_lower_bound, rt_outlier_threshold);
+
+                if ~isempty(cleaned_epochs)
+                    averaged_data = mean(subject_EEG.data(:, :, cleaned_epochs), 3);
+                    % append to individual_averages
+                    individual_averages.(code_str) = cat(3, individual_averages.(code_str), averaged_data);
+                end
+            end
+        end
+
     else
-        fprintf('EXCLUDED: insufficient epochs for one or more codes\n');
+        % format failed codes for output
+        failed_codes_str = sprintf('%d, ', failed_primary_codes);
+        failed_codes_str = failed_codes_str(1:end-2); % remove trailing comma & space
+        fprintf('EXCLUDED: insufficient epochs in primary conditions: %s\n', failed_codes_str);
     end
     
 end % end subject loop
@@ -283,7 +338,7 @@ grand_averages.chanlocs = individual_averages.chanlocs;
 grand_averages.srate = individual_averages.srate;
 grand_averages.nbchan = individual_averages.nbchan;
 
-% create grand averages for each code - SIMPLIFIED & FIXED
+% create grand averages for each code
 fprintf(log_fid, '=== GRAND AVERAGE CREATION ===\n');
 for code_idx = 1:length(codes)
     code = codes(code_idx);
@@ -292,16 +347,37 @@ for code_idx = 1:length(codes)
     fprintf('creating grand average for code %d...\n', code);
     fprintf(log_fid, 'code %d (%s):\n', code, code_names(code));
     
-    % since all included subjects have data for all codes, just directly copy the data
-    % no need for zero-filling or complex indexing - just use what's already there
-    grand_averages.(code_str) = individual_averages.(code_str);
+    % count subjects with sufficient data for this code
+    subjects_for_this_code = {};
+    subject_indices = [];
     
-    num_subjects = size(individual_averages.(code_str), 3);
+    for subj_idx = 1:length(included_subjects)
+        subject = included_subjects{subj_idx};
+        % get this subject's inclusion pattern & check this code
+        subject_code_inclusion = condition_inclusion(subject);
+        if subject_code_inclusion(code_idx)
+            subjects_for_this_code{end+1} = subject;
+            subject_indices = [subject_indices, subj_idx];
+        end
+    end
+    
+    % extract only those subjects' data
+    if ~isempty(subject_indices)
+        grand_averages.(code_str) = individual_averages.(code_str)(:, :, subject_indices);
+    else
+        grand_averages.(code_str) = [];
+    end
+    
+    num_subjects = length(subjects_for_this_code);
     fprintf('  stored data from %d subjects\n', num_subjects);
-    fprintf(log_fid, '  - subjects contributing to grand average: %d\n', num_subjects);
-    fprintf(log_fid, '  - data dimensions: [%d channels x %d timepoints x %d subjects]\n', ...
-        size(individual_averages.(code_str), 1), size(individual_averages.(code_str), 2), num_subjects);
+    fprintf(log_fid, '  - subjects contributing: %d\n', num_subjects);
+    fprintf(log_fid, '  - subject list: %s\n', strjoin(subjects_for_this_code, ', '));
+    if ~isempty(subject_indices)
+        fprintf(log_fid, '  - data dimensions: [%d channels x %d timepoints x %d subjects]\n', ...
+            size(grand_averages.(code_str), 1), size(grand_averages.(code_str), 2), num_subjects);
+    end
 end
+
 fprintf(log_fid, '\n');
 
 % write grand average summary statistics
@@ -362,7 +438,7 @@ fprintf(log_fid, '=== FILE OUTPUTS ===\n');
 
 % save .mat file with all data in grand_averages subdirectory
 mat_file = fullfile(grand_avg_dir, 'grand_averages.mat');
-save(mat_file, 'grand_averages', 'included_subjects', 'codes', 'processing_stats');
+save(mat_file, 'grand_averages', 'included_subjects', 'codes', 'processing_stats', 'condition_inclusion');
 fprintf(log_fid, 'saved .mat file: %s\n', mat_file);
 
 % save individual .set/.fdt files for each code in grand_averages subdirectory (quietly)

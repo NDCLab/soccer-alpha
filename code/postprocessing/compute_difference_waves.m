@@ -1,4 +1,4 @@
-function difference_waves = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir)
+function difference_waves = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, condition_inclusion, codes)
 % compute_difference_waves - create configurable difference waves for ERP analysis
 %
 % this function computes difference waves based on user-defined table
@@ -49,7 +49,7 @@ if size(diff_waves_table, 2) ~= 3
     error('difference wave table must have 3 columns: minuend_code, subtrahend_code, wave_name');
 end
 
-% create detailed log file  
+% create detailed log file
 log_file = fullfile(diff_waves_dir, sprintf('difference_waves_log_%s.txt', datestr(now, 'yyyy-mm-dd_HH-MM-SS')));
 log_fid = fopen(log_file, 'w');
 
@@ -80,42 +80,92 @@ for i = 1:num_waves
     minuend_code = double(diff_waves_table(i, 1));
     subtrahend_code = double(diff_waves_table(i, 2));
     wave_name = char(diff_waves_table(i, 3));
-    
+
     % create valid field name by removing "diffWave_" prefix & replacing hyphens
     field_name = strrep(wave_name, 'diffWave_', '');
     field_name = strrep(field_name, '-', '_');
-    
+
     fprintf('processing: %s\n', wave_name);
     fprintf(log_fid, 'difference wave: %s\n', wave_name);
-    
+
     % check if required codes exist in grand averages
     minuend_field = sprintf('code_%d', minuend_code);
     subtrahend_field = sprintf('code_%d', subtrahend_code);
-    
+
     if isfield(grand_averages, minuend_field) && isfield(grand_averages, subtrahend_field)
-        % compute difference wave & store with clean field name
-        difference_waves.(field_name) = grand_averages.(minuend_field) - grand_averages.(subtrahend_field);
-        num_computed = num_computed + 1;
-        
-        fprintf('  computed: %d - %d (stored as: %s)\n', minuend_code, subtrahend_code, field_name);
-        fprintf(log_fid, '  - minuend: code %d\n', minuend_code);
-        fprintf(log_fid, '  - subtrahend: code %d\n', subtrahend_code);
-        fprintf(log_fid, '  - field name: %s\n', field_name);
-        fprintf(log_fid, '  - status: computed successfully\n');
-        
-        % log data dimensions
-        dims = size(difference_waves.(field_name));
-        fprintf(log_fid, '  - data dimensions: [%d channels x %d timepoints x %d subjects]\n', ...
-            dims(1), dims(2), dims(3));
-        
+        % find code indices in codes array
+        minuend_idx = find(codes == minuend_code);
+        subtrahend_idx = find(codes == subtrahend_code);
+
+        % determine which subjects have sufficient data in BOTH conditions
+        subjects_for_this_diffwave = {};
+        minuend_indices = [];
+        subtrahend_indices = [];
+
+        % for each included subject, check if they're in both grand averages
+        for subj_idx = 1:length(included_subjects)
+            subject = included_subjects{subj_idx};
+            subject_inclusion = condition_inclusion(subject);
+
+            % check if subject has both conditions
+            if subject_inclusion(minuend_idx) && subject_inclusion(subtrahend_idx)
+                subjects_for_this_diffwave{end+1} = subject;
+
+                % find this subject's position in each grand average
+                % count how many subjects before this one have the minuend code
+                minuend_pos = 0;
+                for i = 1:subj_idx
+                    temp = condition_inclusion(included_subjects{i});
+                    if temp(minuend_idx)
+                        minuend_pos = minuend_pos + 1;
+                    end
+                end
+
+                subtrahend_pos = 0;
+                for i = 1:subj_idx
+                    temp = condition_inclusion(included_subjects{i});
+                    if temp(subtrahend_idx)
+                        subtrahend_pos = subtrahend_pos + 1;
+                    end
+                end
+
+                minuend_indices = [minuend_indices, minuend_pos];
+                subtrahend_indices = [subtrahend_indices, subtrahend_pos];
+            end
+        end
+
+        % compute difference only from subjects who have both conditions
+        if ~isempty(minuend_indices)
+            minuend_data = grand_averages.(minuend_field)(:, :, minuend_indices);
+            subtrahend_data = grand_averages.(subtrahend_field)(:, :, subtrahend_indices);            difference_waves.(field_name) = minuend_data - subtrahend_data;
+            num_computed = num_computed + 1;
+
+            fprintf('  computed: %d - %d (%d subjects)\n', minuend_code, subtrahend_code, length(subjects_for_this_diffwave));
+            fprintf(log_fid, '  - minuend: code %d\n', minuend_code);
+            fprintf(log_fid, '  - subtrahend: code %d\n', subtrahend_code);
+            fprintf(log_fid, '  - subjects: %d\n', length(subjects_for_this_diffwave));
+            fprintf(log_fid, '  - subject list: %s\n', strjoin(subjects_for_this_diffwave, ', '));
+            fprintf(log_fid, '  - field name: %s\n', field_name);
+            fprintf(log_fid, '  - status: computed successfully\n');
+
+            % log data dimensions
+            dims = size(difference_waves.(field_name));
+            fprintf(log_fid, '  - data dimensions: [%d channels x %d timepoints x %d subjects]\n', ...
+                dims(1), dims(2), dims(3));
+        else
+            num_skipped = num_skipped + 1;
+            warning('no subjects have sufficient data for both conditions in %s', wave_name);
+            fprintf(log_fid, '  - minuend: code %d\n', minuend_code);
+            fprintf(log_fid, '  - subtrahend: code %d\n', subtrahend_code);
+            fprintf(log_fid, '  - subjects: 0 (no subjects with both conditions)\n');
+            fprintf(log_fid, '  - status: SKIPPED - no valid subjects\n');
+        end
     else
+        % codes don't exist in grand averages
         num_skipped = num_skipped + 1;
-        fprintf('  WARNING: missing data for %s (codes %d - %d)\n', ...
-            wave_name, minuend_code, subtrahend_code);
-        fprintf(log_fid, '  - minuend: code %d - %s\n', minuend_code, ...
-            ifelse(isfield(grand_averages, minuend_field), 'available', 'MISSING'));
-        fprintf(log_fid, '  - subtrahend: code %d - %s\n', subtrahend_code, ...
-            ifelse(isfield(grand_averages, subtrahend_field), 'available', 'MISSING'));
+        fprintf('  WARNING: missing data for %s (codes %d - %d)\n', wave_name, minuend_code, subtrahend_code);
+        fprintf(log_fid, '  - minuend: code %d - %s\n', minuend_code, ifelse(isfield(grand_averages, minuend_field), 'available', 'MISSING'));
+        fprintf(log_fid, '  - subtrahend: code %d - %s\n', subtrahend_code, ifelse(isfield(grand_averages, subtrahend_field), 'available', 'MISSING'));
         fprintf(log_fid, '  - status: SKIPPED - missing required data\n');
     end
     fprintf(log_fid, '\n');
@@ -138,12 +188,12 @@ for i = 1:num_waves
     wave_name = char(diff_waves_table(i, 3));
     field_name = strrep(wave_name, 'diffWave_', '');
     field_name = strrep(field_name, '-', '_');
-    
+
     % skip if this difference wave wasn't computed
     if ~isfield(difference_waves, field_name)
         continue;
     end
-    
+
     % create EEG structure for this difference wave
     diff_EEG = eeg_emptyset(); % use eeg_emptyset for proper initialization
     diff_EEG.data = mean(difference_waves.(field_name), 3); % average across subjects
@@ -155,14 +205,14 @@ for i = 1:num_waves
     diff_EEG.trials = 1;
     diff_EEG.xmin = difference_waves.times(1) / 1000;
     diff_EEG.xmax = difference_waves.times(end) / 1000;
-    
+
     % use original wave_name for filename (includes "diffWave_" prefix)
     diff_EEG.setname = wave_name;
     diff_EEG.filename = [wave_name '.set'];
-    
+
     diff_EEG = eeg_checkset(diff_EEG);
     pop_saveset(diff_EEG, 'filename', [wave_name '.set'], 'filepath', diff_waves_dir);
-    
+
     fprintf('saved difference wave .set/.fdt files: %s\n', wave_name);
     fprintf(log_fid, '  - %s.set/.fdt\n', wave_name);
 end
@@ -194,9 +244,9 @@ end
 
 % helper function for conditional string output in logging
 function result = ifelse(condition, true_val, false_val)
-    if condition
-        result = true_val;
-    else
-        result = false_val;
-    end
+if condition
+    result = true_val;
+else
+    result = false_val;
+end
 end
