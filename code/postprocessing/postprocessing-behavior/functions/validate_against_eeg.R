@@ -49,91 +49,89 @@ load_eeg_summary_table <- function(eeg_date, derivatives_dir) {
   return(eeg_data)
 }
 
-compare_behavioral_to_eeg <- function(behavioral_results, eeg_data) {
-  # compare behavioral postprocessing results to eeg postprocessing
-  # flag any discrepancies in trial counts
+validate_trial_counts <- function(behavioral_inclusion, eeg_summary, verbose = TRUE) {
+  # compare trial counts between behavioral & eeg postprocessing
   #
   # inputs:
-  #   behavioral_results - list from check_all_subjects()
-  #   eeg_data - tibble from load_eeg_summary_table()
+  #   behavioral_inclusion - tibble from check_inclusion_criteria()
+  #   eeg_summary - tibble from load_eeg_summary_table()
+  #   verbose - print diagnostic info
   #
   # outputs:
-  #   comparison results with discrepancies flagged
+  #   list with validation results & any discrepancies
   
-  message("\nvalidating behavioral postprocessing against eeg postprocessing...")
+  if (verbose) message("\nvalidating trial counts against eeg postprocessing...")
   
-  # extract behavioral stats into comparable format
-  behavioral_summary <- map_dfr(names(behavioral_results), function(subj) {
-    result <- behavioral_results[[subj]]
-    
-    # get counts for each code
-    counts <- result$condition_counts %>%
-      select(code, final_trials)
-    
-    # get exclusion counts from original data (need to pass this in separately)
-    tibble(
-      subject = subj,
-      included = result$included_in_dataset,
-      accuracy = result$overall_accuracy
-    ) %>%
-      bind_cols(
-        counts %>% 
-          pivot_wider(names_from = code, values_from = final_trials, names_prefix = "code_")
-      )
-  })
+  # prepare eeg data for comparison
+  eeg_clean <- eeg_summary %>%
+    mutate(subject = as.character(ID)) %>%
+    select(subject, Status, 
+           code_102 = `102 (soc-invis-FE)`,
+           code_104 = `104 (soc-invis-NFG)`,
+           code_111 = `111 (soc-vis-corr)`,
+           code_112 = `112 (soc-vis-FE)`,
+           code_113 = `113 (soc-vis-NFE)`,
+           code_202 = `202 (nonsoc-invis-FE)`,
+           code_204 = `204 (nonsoc-invis-NFG)`,
+           code_211 = `211 (nonsoc-vis-corr)`,
+           code_212 = `212 (nonsoc-vis-FE)`,
+           code_213 = `213 (nonsoc-vis-NFE)`)
   
-  # match subjects between behavioral & eeg
-  eeg_clean <- eeg_data %>%
-    mutate(subject = as.character(ID))
+  # prepare behavioral data for comparison
+  beh_clean <- behavioral_inclusion %>%
+    select(subject, included,
+           code_102 = n_code_102, code_104 = n_code_104,
+           code_111 = n_code_111, code_112 = n_code_112, code_113 = n_code_113,
+           code_202 = n_code_202, code_204 = n_code_204,
+           code_211 = n_code_211, code_212 = n_code_212, code_213 = n_code_213)
   
-  common_subjects <- intersect(behavioral_summary$subject, eeg_clean$subject)
+  # find common subjects
+  common_subjects <- intersect(beh_clean$subject, eeg_clean$subject)
   
-  message("  subjects in both datasets: ", length(common_subjects))
+  if (verbose) message("  subjects in both datasets: ", length(common_subjects))
   
-  if (length(common_subjects) == 0) {
-    warning("no common subjects found between behavioral and eeg data")
-    return(NULL)
-  }
-  
-  # compare trial counts for common subjects
+  # compare trial counts
+  all_codes <- c(102, 104, 111, 112, 113, 202, 204, 211, 212, 213)
   discrepancies <- tibble()
   
   for (subj in common_subjects) {
-    beh_row <- behavioral_summary %>% filter(subject == subj)
+    beh_row <- beh_clean %>% filter(subject == subj)
     eeg_row <- eeg_clean %>% filter(subject == subj)
     
-    # compare each code
-    for (code in ALL_CODES) {
-      beh_col <- paste0("code_", code)
-      eeg_col <- paste0(code, " (", ALL_CODE_NAMES[as.character(code)], ")")
+    for (code in all_codes) {
+      code_col <- paste0("code_", code)
+      beh_count <- beh_row[[code_col]]
+      eeg_count <- eeg_row[[code_col]]
       
-      if (beh_col %in% names(beh_row) && eeg_col %in% names(eeg_row)) {
-        beh_count <- beh_row[[beh_col]]
-        eeg_count <- eeg_row[[eeg_col]]
-        
-        if (!is.na(beh_count) && !is.na(eeg_count) && beh_count != eeg_count) {
-          discrepancies <- bind_rows(discrepancies, tibble(
-            subject = subj,
-            code = code,
-            behavioral_count = beh_count,
-            eeg_count = eeg_count,
-            difference = beh_count - eeg_count
-          ))
-        }
+      if (!is.na(beh_count) && !is.na(eeg_count) && beh_count != eeg_count) {
+        discrepancies <- bind_rows(discrepancies, tibble(
+          subject = subj,
+          code = code,
+          behavioral_count = beh_count,
+          eeg_count = eeg_count,
+          difference = beh_count - eeg_count
+        ))
       }
     }
   }
   
+  # summary
   if (nrow(discrepancies) == 0) {
-    message("  ✓ all trial counts match between behavioral and eeg!")
+    if (verbose) message("  ✓ all trial counts match between behavioral & eeg!")
+    validation_status <- "PASS"
   } else {
-    warning(nrow(discrepancies), " discrepancies found:")
-    print(discrepancies)
+    if (verbose) {
+      message("  ✗ found ", nrow(discrepancies), " discrepancies:")
+      print(discrepancies)
+    }
+    validation_status <- "FAIL"
   }
   
   return(list(
+    status = validation_status,
     common_subjects = common_subjects,
-    discrepancies = discrepancies,
-    match_rate = 1 - (nrow(discrepancies) / (length(common_subjects) * length(ALL_CODES)))
+    n_compared = length(common_subjects) * length(all_codes),
+    n_discrepancies = nrow(discrepancies),
+    discrepancies = discrepancies
   ))
 }
