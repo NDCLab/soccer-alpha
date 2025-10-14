@@ -115,14 +115,36 @@ validate_trial_counts <- function(behavioral_inclusion, eeg_summary, verbose = T
     }
   }
   
-  # summary
-  if (nrow(discrepancies) == 0) {
-    if (verbose) message("  ✓ all trial counts match between behavioral & eeg!")
+  # summary - check if all discrepancies are for excluded subjects
+  excluded_subjects <- behavioral_inclusion %>% 
+    filter(!included) %>% 
+    pull(subject)
+  
+  # only check if there are discrepancies
+  if (nrow(discrepancies) > 0) {
+    discrepancies_for_excluded <- discrepancies %>%
+      filter(subject %in% excluded_subjects)
+    
+    unexpected_discrepancies <- discrepancies %>%
+      filter(!(subject %in% excluded_subjects))
+  } else {
+    discrepancies_for_excluded <- discrepancies
+    unexpected_discrepancies <- discrepancies
+  }
+  
+  if (nrow(unexpected_discrepancies) == 0) {
+    if (verbose) {
+      if (nrow(discrepancies) == 0) {
+        message("  ✓ all trial counts match between behavioral & eeg!")
+      } else {
+        message("  ✓ all trial counts match (", nrow(discrepancies), " discrepancies are for excluded subjects)")
+      }
+    }
     validation_status <- "PASS"
   } else {
     if (verbose) {
-      message("  ✗ found ", nrow(discrepancies), " discrepancies:")
-      print(discrepancies)
+      message("  ✗ found ", nrow(unexpected_discrepancies), " unexpected discrepancies:")
+      print(unexpected_discrepancies)
     }
     validation_status <- "FAIL"
   }

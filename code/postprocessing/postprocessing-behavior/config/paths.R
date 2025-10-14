@@ -14,28 +14,21 @@ preprocessed_path <- readLines(preprocessed_link, warn = FALSE) %>% str_trim()
 behavioral_dir <- file.path(preprocessed_path, "s1_r1", "behavior")
 eeg_dir <- file.path(preprocessed_path, "s1_r1", "eeg")
 
-# output directory (timestamped)
+# output directory (matching erp-postprocessing naming convention)
 output_dir <- file.path(repo_root, "derivatives", 
-                        paste0(Sys.Date(), "_postprocessing-behavior"))
+                        paste0(Sys.Date(), "_behavior-postprocessing"))
 
-# output subdirectories
-cleaned_data_dir <- file.path(output_dir, "cleaned_data")
-descriptives_dir <- file.path(output_dir, "descriptives")
-statistics_dir <- file.path(output_dir, "statistics")
-logs_dir <- file.path(output_dir, "logs")
+# logs go in main output directory (flat structure like erp-postprocessing)
+logs_dir <- output_dir
 
-# matlab outputs for validation (if needed)
-matlab_erp_dir <- file.path(repo_root, "derivatives")
+# derivatives directory for validation
+derivatives_dir <- file.path(repo_root, "derivatives")
 
-# create output directories
+# create output directory
 create_output_dirs <- function() {
   dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
-  dir.create(cleaned_data_dir, showWarnings = FALSE, recursive = TRUE)
-  dir.create(descriptives_dir, showWarnings = FALSE, recursive = TRUE)
-  dir.create(statistics_dir, showWarnings = FALSE, recursive = TRUE)
-  dir.create(logs_dir, showWarnings = FALSE, recursive = TRUE)
   
-  message("output directories created:")
+  message("output directory created:")
   message("  ", output_dir)
 }
 
