@@ -1,0 +1,352 @@
+---
+title: "Behavioral Analyses Report"
+author: "SocCEr Study"
+date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: flatly
+    highlight: tango
+    code_folding: hide
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 6,
+  dpi = 300
+)
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+```
+
+# Overview
+
+**Analysis Date:** `r format(Sys.Date(), '%B %d, %Y')`  
+**Number of Subjects:** `r analysis_data$n_subjects`  
+**Total Trials:** `r nrow(analysis_data$data)`
+
+---
+
+# Error Rate Analyses
+
+## 1. Overall Error Rate (Visible Condition)
+
+**Research Question:** Does social presence affect overall error rates in the visible-target condition?
+
+```{r error-rate-overall}
+# load results
+results <- readRDS(file.path(error_rates_dir, "overall_error_rate_visible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, 
+                    "social" = "Social",
+                    "nonsocial" = "Non-social"),
+    across(c(mean, sd, se), ~round(., 2))
+  ) %>%
+  rename(
+    Condition = social,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Overall Error Rate (%)",
+      align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+**Statistical Test:** Paired-samples t-test  
+**Result:** *t*(`r results$df`) = `r round(results$t_statistic, 3)`, *p* = `r round(results$p_value, 4)`  
+**Effect Size:** Cohen's *d* = `r round(results$cohens_d, 3)`  
+**Mean Difference:** `r round(results$mean_difference, 3)`  
+**95% CI:** [`r round(results$confidence_interval[1], 3)`, `r round(results$confidence_interval[2], 3)`]
+
+**Conclusion:** `r if(results$p_value < 0.05) "There is a significant difference" else "There is no significant difference"` in overall error rate between social and non-social conditions.
+
+```{r plot-error-overall, fig.cap="Overall error rate by social condition"}
+knitr::include_graphics(file.path(results_figures_dir, "error_rate_overall_visible.png"))
+```
+
+---
+
+## 2. Proportion Flanker Errors (Visible Condition)
+
+**Research Question:** Does social presence affect the proportion of flanker errors in the visible-target condition?
+
+```{r error-rate-flanker-vis}
+# load results
+results <- readRDS(file.path(error_rates_dir, "proportion_flanker_visible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, 
+                    "social" = "Social",
+                    "nonsocial" = "Non-social"),
+    across(c(mean, sd, se), ~round(., 2))
+  ) %>%
+  rename(
+    Condition = social,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Proportion Flanker Errors (Visible, %)",
+      align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+**Statistical Test:** Paired-samples t-test  
+**Result:** *t*(`r results$df`) = `r round(results$t_statistic, 3)`, *p* = `r round(results$p_value, 4)`  
+**Effect Size:** Cohen's *d* = `r round(results$cohens_d, 3)`  
+**Mean Difference:** `r round(results$mean_difference, 3)`  
+**95% CI:** [`r round(results$confidence_interval[1], 3)`, `r round(results$confidence_interval[2], 3)`]
+
+**Conclusion:** `r if(results$p_value < 0.05) "There is a significant difference" else "There is no significant difference"` in the proportion of flanker errors between social and non-social conditions in the visible-target condition.
+
+```{r plot-flanker-vis, fig.cap="Proportion flanker errors (visible condition)"}
+knitr::include_graphics(file.path(results_figures_dir, "error_rate_flanker_visible.png"))
+```
+
+---
+
+## 3. Proportion Flanker Errors (Invisible Condition)
+
+**Research Question:** Does social presence affect the proportion of flanker errors in the invisible-target condition?
+
+```{r error-rate-flanker-invis}
+# load results
+results <- readRDS(file.path(error_rates_dir, "proportion_flanker_invisible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, 
+                    "social" = "Social",
+                    "nonsocial" = "Non-social"),
+    across(c(mean, sd, se), ~round(., 2))
+  ) %>%
+  rename(
+    Condition = social,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Proportion Flanker Errors (Invisible, %)",
+      align = c("l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+**Statistical Test:** Paired-samples t-test  
+**Result:** *t*(`r results$df`) = `r round(results$t_statistic, 3)`, *p* = `r round(results$p_value, 4)`  
+**Effect Size:** Cohen's *d* = `r round(results$cohens_d, 3)`  
+**Mean Difference:** `r round(results$mean_difference, 3)`  
+**95% CI:** [`r round(results$confidence_interval[1], 3)`, `r round(results$confidence_interval[2], 3)`]
+
+**Conclusion:** `r if(results$p_value < 0.05) "There is a significant difference" else "There is no significant difference"` in the proportion of flanker errors between social and non-social conditions in the invisible-target condition.
+
+```{r plot-flanker-invis, fig.cap="Proportion flanker errors (invisible condition)"}
+knitr::include_graphics(file.path(results_figures_dir, "error_rate_flanker_invisible.png"))
+```
+
+---
+
+# Response Time Analyses
+
+## 1. Response Time: Correctness × Social (Visible Condition)
+
+```{r rt-correctness-visible, eval=file.exists(file.path(session_dir, "response_times", "rt_correctness_visible.rds"))}
+# load results
+results <- readRDS(file.path(session_dir, "response_times", "rt_correctness_visible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, "social" = "Social", "nonsocial" = "Non-social"),
+    correctness = recode(correctness, "correct" = "Correct", "error" = "Error"),
+    across(c(mean, sd, se), ~round(., 3))
+  ) %>%
+  rename(
+    `Social Condition` = social,
+    Correctness = correctness,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Response Time (ms)",
+      align = c("l", "l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+
+# format ANOVA table
+anova_table <- results$anova_table %>%
+  mutate(
+    across(c(F, p, partial_eta_sq), ~round(., 3))
+  ) %>%
+  select(Effect, F, DFn, DFd, p, `Partial η²` = partial_eta_sq) %>%
+  rename(
+    `F value` = F,
+    `df (num)` = DFn,
+    `df (den)` = DFd,
+    `p value` = p
+  )
+
+kable(anova_table,
+      caption = "Repeated Measures ANOVA Results",
+      align = c("l", "c", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+```{r plot-rt-correctness, eval=file.exists(file.path(results_figures_dir, "rt_correctness_visible.png"))}
+knitr::include_graphics(file.path(results_figures_dir, "rt_correctness_visible.png"))
+```
+
+---
+
+## 2. Response Time: Error Type × Social (Visible Condition)
+
+```{r rt-error-type-visible, eval=file.exists(file.path(session_dir, "response_times", "rt_error_type_visible.rds"))}
+# load results
+results <- readRDS(file.path(session_dir, "response_times", "rt_error_type_visible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, "social" = "Social", "nonsocial" = "Non-social"),
+    error_type = recode(error_type, "flanker" = "Flanker", "nonflanker" = "Non-flanker"),
+    across(c(mean, sd, se), ~round(., 3))
+  ) %>%
+  rename(
+    `Social Condition` = social,
+    `Error Type` = error_type,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Response Time (ms)",
+      align = c("l", "l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+
+# format ANOVA table
+anova_table <- results$anova_table %>%
+  mutate(
+    across(c(F, p, partial_eta_sq), ~round(., 3))
+  ) %>%
+  select(Effect, F, DFn, DFd, p, `Partial η²` = partial_eta_sq) %>%
+  rename(
+    `F value` = F,
+    `df (num)` = DFn,
+    `df (den)` = DFd,
+    `p value` = p
+  )
+
+kable(anova_table,
+      caption = "Repeated Measures ANOVA Results",
+      align = c("l", "c", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+```{r plot-rt-error-type, eval=file.exists(file.path(results_figures_dir, "rt_error_type_visible.png"))}
+knitr::include_graphics(file.path(results_figures_dir, "rt_error_type_visible.png"))
+```
+
+---
+
+## 3. Response Time: Response Type × Social (Invisible Condition)
+
+```{r rt-response-type-invisible, eval=file.exists(file.path(session_dir, "response_times", "rt_response_type_invisible.rds"))}
+# load results
+results <- readRDS(file.path(session_dir, "response_times", "rt_response_type_invisible.rds"))
+
+# format descriptives table
+desc_table <- results$descriptives %>%
+  mutate(
+    social = recode(social, "social" = "Social", "nonsocial" = "Non-social"),
+    response_type = recode(response_type, 
+                           "flanker_error" = "Flanker Error", 
+                           "nonflanker_guess" = "Non-flanker Guess"),
+    across(c(mean, sd, se), ~round(., 3))
+  ) %>%
+  rename(
+    `Social Condition` = social,
+    `Response Type` = response_type,
+    N = n,
+    Mean = mean,
+    SD = sd,
+    SE = se
+  )
+
+kable(desc_table, 
+      caption = "Descriptive Statistics: Response Time (ms)",
+      align = c("l", "l", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+
+# format ANOVA table
+anova_table <- results$anova_table %>%
+  mutate(
+    across(c(F, p, partial_eta_sq), ~round(., 3))
+  ) %>%
+  select(Effect, F, DFn, DFd, p, `Partial η²` = partial_eta_sq) %>%
+  rename(
+    `F value` = F,
+    `df (num)` = DFn,
+    `df (den)` = DFd,
+    `p value` = p
+  )
+
+kable(anova_table,
+      caption = "Repeated Measures ANOVA Results",
+      align = c("l", "c", "c", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
+
+```{r plot-rt-response-type, eval=file.exists(file.path(results_figures_dir, "rt_response_type_invisible.png"))}
+knitr::include_graphics(file.path(results_figures_dir, "rt_response_type_invisible.png"))
+```
+
+---
+
+# Confidence Rating Analyses
+
+*[Sections for confidence analyses would follow the same pattern]*
+
+---
+
+# Session Information
+
+```{r session-info}
+sessionInfo()
+```
