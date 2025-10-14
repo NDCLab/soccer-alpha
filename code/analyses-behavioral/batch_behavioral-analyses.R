@@ -21,7 +21,7 @@ source("functions/plot_confidence-ratings.R")
 # === analysis selection flags ===
 RUN_ERROR_RATES <- TRUE
 RUN_RESPONSE_TIMES <- TRUE
-RUN_CONFIDENCE <- FALSE
+RUN_CONFIDENCE <- TRUE
 RUN_REPORT <- TRUE
 
 # specific analyses within each category
