@@ -1,4 +1,4 @@
-function write_processing_report(processing_report, diff_waves_table, output_dir, report_file)
+function write_processing_report(processing_report, diff_waves_table, output_dir, report_file, min_trials_per_code)
 % write comprehensive processing summary report to text file
 % 
 % inputs:
@@ -43,7 +43,15 @@ fprintf(report_fid, '\n');
 
 % processing parameters
 fprintf(report_fid, '=== PROCESSING PARAMETERS ===\n');
-fprintf(report_fid, 'minimum epochs threshold: %d\n', processing_report.parameters.min_epochs_threshold);
+fprintf(report_fid, 'minimum epochs thresholds (per code):\n');
+if ~isempty(min_trials_per_code)
+    codes_list = fieldnames(min_trials_per_code);
+    for i = 1:length(codes_list)
+        fprintf(report_fid, '  - %s: %d trials\n', codes_list{i}, min_trials_per_code.(codes_list{i}));
+    end
+else
+    fprintf(report_fid, '  - not available\n');
+end
 fprintf(report_fid, 'minimum accuracy threshold: %.1f%%\n', processing_report.parameters.min_accuracy_threshold * 100);
 fprintf(report_fid, 'RT lower bound: %d ms\n', processing_report.parameters.rt_lower_bound);
 fprintf(report_fid, 'RT outlier threshold: %.1f SD\n', processing_report.parameters.rt_outlier_threshold);

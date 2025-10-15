@@ -1,4 +1,4 @@
-function generate_subject_summary_table(processing_stats, included_subjects, codes, output_dir, condition_inclusion)
+function generate_subject_summary_table(processing_stats, included_subjects, codes, output_dir, condition_inclusion, min_trials_per_code)
 % generate tab-separated summary table for all subjects
 % creates table matching format from google doc for easy copy-paste
 %

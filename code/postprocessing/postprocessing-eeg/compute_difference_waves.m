@@ -1,4 +1,4 @@
-function difference_waves = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, condition_inclusion, codes)
+function difference_waves = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, condition_inclusion, codes, require_matched_subjects)
 % compute_difference_waves - create configurable difference waves for ERP analysis
 %
 % this function computes difference waves based on user-defined table
@@ -8,6 +8,7 @@ function difference_waves = compute_difference_waves(grand_averages, included_su
 %   included_subjects - cell array of included subject IDs
 %   diff_waves_table - matrix [minuend_code, subtrahend_code, wave_name]
 %   output_dir - path to save difference waves
+%   require_matched_subjects - logical, if true only compute from subjects in both conditions (default: true)
 %
 % outputs:
 %   difference_waves - struct containing computed difference waves
@@ -59,6 +60,7 @@ fprintf(log_fid, 'processing date: %s\n', datestr(now));
 fprintf(log_fid, 'script: compute_difference_waves.m\n');
 fprintf(log_fid, 'included subjects: %d\n', length(included_subjects));
 fprintf(log_fid, 'subjects: %s\n', strjoin(included_subjects, ', '));
+fprintf(log_fid, 'require_matched_subjects: %s\n', mat2str(require_matched_subjects));
 fprintf(log_fid, '\n');
 
 % initialize difference waves structure
@@ -107,30 +109,36 @@ for i = 1:num_waves
             subject = included_subjects{subj_idx};
             subject_inclusion = condition_inclusion(subject);
 
-            % check if subject has both conditions
-            if subject_inclusion(minuend_idx) && subject_inclusion(subtrahend_idx)
-                subjects_for_this_diffwave{end+1} = subject;
+            % check if subject has both conditions (only if require_matched_subjects is true)
+            if require_matched_subjects
+                % strict mode: subject must have BOTH conditions
+                if subject_inclusion(minuend_idx) && subject_inclusion(subtrahend_idx)
+                    subjects_for_this_diffwave{end+1} = subject;
 
-                % find this subject's position in each grand average
-                % count how many subjects before this one have the minuend code
-                minuend_pos = 0;
-                for i = 1:subj_idx
-                    temp = condition_inclusion(included_subjects{i});
-                    if temp(minuend_idx)
-                        minuend_pos = minuend_pos + 1;
+                    % find this subject's position in each grand average
+                    % count how many subjects before this one have the minuend code
+                    minuend_pos = 0;
+                    for i = 1:subj_idx
+                        temp = condition_inclusion(included_subjects{i});
+                        if temp(minuend_idx)
+                            minuend_pos = minuend_pos + 1;
+                        end
                     end
-                end
 
-                subtrahend_pos = 0;
-                for i = 1:subj_idx
-                    temp = condition_inclusion(included_subjects{i});
-                    if temp(subtrahend_idx)
-                        subtrahend_pos = subtrahend_pos + 1;
+                    subtrahend_pos = 0;
+                    for i = 1:subj_idx
+                        temp = condition_inclusion(included_subjects{i});
+                        if temp(subtrahend_idx)
+                            subtrahend_pos = subtrahend_pos + 1;
+                        end
                     end
-                end
 
-                minuend_indices = [minuend_indices, minuend_pos];
-                subtrahend_indices = [subtrahend_indices, subtrahend_pos];
+                    minuend_indices = [minuend_indices, minuend_pos];
+                    subtrahend_indices = [subtrahend_indices, subtrahend_pos];
+                end
+            else
+                % loose mode would go here if ever needed
+                error('Loose mode (require_matched_subjects=false) not implemented for within-subjects design');
             end
         end
 

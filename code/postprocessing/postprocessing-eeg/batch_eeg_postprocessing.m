@@ -74,8 +74,8 @@ min_trials_per_code.code_204 = 10;   % nonsocial invisible NFG
 
 
 % inclusion thresholds
-min_epochs_threshold = 10;
 min_accuracy_threshold = 0.6;
+min_epochs_threshold = 10;
 
 % RT trimming parameters
 rt_lower_bound = 150; % ms, set to 0 if no lower bound
@@ -119,6 +119,9 @@ diff_waves_table = [
 
 fprintf('defined %d difference wave computations\n', size(diff_waves_table, 1));
 
+% difference wave computation settings
+require_matched_subjects = true;  % only compute difference waves from subjects present in both conditions
+
 ern_time_window = [0, 100];
 pe_time_window = [200, 500];
 
@@ -139,7 +142,6 @@ processing_report.input_data.codes_processed = codes;
 processing_report.input_data.code_names = code_names;
 
 % processing parameters
-processing_report.parameters.min_epochs_threshold = min_epochs_threshold;
 processing_report.parameters.min_accuracy_threshold = min_accuracy_threshold;
 processing_report.parameters.rt_lower_bound = rt_lower_bound;
 processing_report.parameters.rt_outlier_threshold = rt_outlier_threshold;
@@ -190,7 +192,7 @@ if run_grand_averages
     % generate subject summary table
     fprintf('\ngenerating subject summary table...\n');
     grand_avg_data = load(grand_avg_file);
-    generate_subject_summary_table(grand_avg_data.processing_stats, included_subjects, codes, output_dir, grand_avg_data.condition_inclusion);
+    generate_subject_summary_table(grand_avg_data.processing_stats, included_subjects, codes, output_dir, grand_avg_data.condition_inclusion, grand_avg_data.min_trials_per_code);
     
 else
     % load existing grand averages if not running step 1
@@ -217,7 +219,7 @@ if run_difference_waves
     
     % function call
     grand_avg_data = load(grand_avg_file);
-    [difference_waves] = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, grand_avg_data.condition_inclusion, codes);
+    [difference_waves] = compute_difference_waves(grand_averages, included_subjects, diff_waves_table, output_dir, grand_avg_data.condition_inclusion, codes, require_matched_subjects);
     
     step2_end_time = datetime('now');
     
@@ -278,8 +280,18 @@ processing_report.script_info.total_duration = processing_end_time - processing_
 
 % generate comprehensive text report
 report_file = fullfile(output_dir, sprintf('postprocessing_summary_%s.txt', datestr(now, 'yyyy-mm-dd_HH-MM-SS')));
-write_processing_report(processing_report, diff_waves_table, output_dir, report_file);
-
+% load min_trials_per_code if available
+if exist(grand_avg_file, 'file')
+    grand_avg_data = load(grand_avg_file);
+    if isfield(grand_avg_data, 'min_trials_per_code')
+        min_trials_per_code = grand_avg_data.min_trials_per_code;
+    else
+        min_trials_per_code = [];
+    end
+else
+    min_trials_per_code = [];
+end
+write_processing_report(processing_report, diff_waves_table, output_dir, report_file, min_trials_per_code);
 % print console summary
 print_console_summary(processing_report, output_dir, report_file, console_log_file);
 
