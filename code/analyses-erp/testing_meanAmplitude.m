@@ -78,7 +78,16 @@ tail = 'both';
 tailInfo = 'two-tailed';
 samples = 'within';
 contrastResults = [];
+outputDir = pwd;  % default to current directory
+
 for i = 1:length(varargin)
+    if strcmp(varargin{i}, 'outputDir')
+        if length(varargin)>i
+            outputDir = varargin{i+1};
+        else
+            disp('ERROR: Input for parameter ''outputDir'' is not valid!');
+        end
+    end
     if strcmp(varargin{i}, 'baseline')
         if length(varargin)>i
             baseline = varargin{i+1};

@@ -1,216 +1,280 @@
 % batch_erp_analyses.m
-% main batch script for soccer erp analyses
-% runs statistical analyses on erp components (ern & pe)
-% uses testing_meanAmplitude for statistics & visual_comperp for visualization
+% statistical analyses script for soccer erp data
+% author: marlene buch
+% date: 2025-10-15
 
-function batch_erp_analyses(varargin)
+%% create timestamped output directory structure
+timestamp = datestr(now, 'yyyy-mm-dd_HH-MM-SS');
+resultsBase = 'C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\results\erp';
+outputDir = fullfile(resultsBase, ['erp_' timestamp]);
 
-clear; clc;
+% create subdirectories matching your existing structure
+tablesDir = fullfile(outputDir, 'tables');
+logsDir = fullfile(outputDir, 'logs');
+reportsDir = fullfile(outputDir, 'reports');
 
-%% 1. setup & configuration
-fprintf('\n=== SOCCER ERP ANALYSES ===\n');
-fprintf('started: %s\n\n', datestr(now));
+if ~exist(tablesDir, 'dir'), mkdir(tablesDir); end
+if ~exist(logsDir, 'dir'), mkdir(logsDir); end  
+if ~exist(reportsDir, 'dir'), mkdir(reportsDir); end
 
-% load configuration with optional date
-if nargin > 0
-    cfg = config_erp_analyses(varargin{1});
-else
-    cfg = config_erp_analyses();  % uses most recent
-end
+% create separate folders for visible & invisible statistics
+visTableDir = fullfile(tablesDir, 'visible-target');
+invisTableDir = fullfile(tablesDir, 'invisible-target');
+if ~exist(visTableDir, 'dir'), mkdir(visTableDir); end
+if ~exist(invisTableDir, 'dir'), mkdir(invisTableDir); end
 
-% create output directories if needed
-if ~exist(fullfile(cfg.output_path, 'tables'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'tables'));
-end
-if ~exist(fullfile(cfg.output_path, 'tables', 'visible-target'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'tables', 'visible-target'));
-end
-if ~exist(fullfile(cfg.output_path, 'tables', 'invisible-target'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'tables', 'invisible-target'));
-end
-if ~exist(fullfile(cfg.output_path, 'figures'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'figures'));
-end
-if ~exist(fullfile(cfg.output_path, 'figures', 'visible-target'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'figures', 'visible-target'));
-end
-if ~exist(fullfile(cfg.output_path, 'figures', 'invisible-target'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'figures', 'invisible-target'));
-end
-if ~exist(fullfile(cfg.output_path, 'logs'), 'dir')
-    mkdir(fullfile(cfg.output_path, 'logs'));
-end
+%% paths to data
+diffWaves = "C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-15_erp-postprocessing\difference_waves";
+grandAver = "C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-15_erp-postprocessing\grand_averages";
 
-% start logging
-diary(fullfile(cfg.output_path, 'logs', sprintf('erp_analysis_%s.log', datestr(now, 'yyyy-mm-dd_HH-MM-SS'))));
+%% electrode clusters
+ern_cluster = [1, 2, 34];
+pe_cluster = [17, 18, 49];
 
-%% 2. check data availability
-fprintf('checking data files...\n');
+%% start logging
+diary(fullfile(logsDir, sprintf('erp_analysis_%s.log', timestamp)));
+diary on;
 
-% paths to key directories
-diff_waves_dir = fullfile(cfg.derivatives_path, 'difference_waves');
-grand_avg_dir = fullfile(cfg.derivatives_path, 'grand_averages');
+fprintf('ERP Analysis Started: %s\n\n', timestamp);
 
-% check if directories exist
-if ~exist(diff_waves_dir, 'dir')
-    error('difference waves directory not found: %s', diff_waves_dir);
-end
-if ~exist(grand_avg_dir, 'dir')
-    error('grand averages directory not found: %s', grand_avg_dir);
-end
+%% ========================================================================
+%% VISIBLE-TARGET
+%% ========================================================================
+fprintf('=== VISIBLE-TARGET ANALYSES ===\n\n');
 
-fprintf('  difference waves: %s\n', diff_waves_dir);
-fprintf('  grand averages: %s\n\n', grand_avg_dir);
+%% ERN - test if detectable
+% social-FE p = 0.044 → DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_112_social_vis_FE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_FE', 'Soc_Corr'}, ...
+    'visible_soc_FE_ERN_detection', [0 100], ern_cluster);
 
-%% 3. visible condition analyses
-if cfg.run_visible
-    fprintf('=== VISIBLE CONDITION ANALYSES ===\n\n');
-    
-    % define files for visible condition (all underscores)
-    visible_files = {
-        'diffWave_soc_vis_FE',      % social flanker error
-        'diffWave_soc_vis_NFE',     % social non-flanker error  
-        'diffWave_nonsoc_vis_FE',   % nonsocial flanker error
-        'diffWave_nonsoc_vis_NFE'   % nonsocial non-flanker error
-    };
-    
-    % labels for output
-    visible_labels = {
-        'soc_FE',
-        'soc_NFE', 
-        'nonsoc_FE',
-        'nonsoc_NFE'
-    };
-    
-    %% 3a. ern analysis - visible
-    fprintf('analyzing ern component (0-100ms)...\n');
-    
-    % run testing_meanAmplitude for ern
-    testing_meanAmplitude(diff_waves_dir, ...
-        visible_files, ...
-        visible_labels, ...
-        fullfile(cfg.output_path, 'tables', 'visible-target', 'ern'), ...
-        cfg.ern_window, ...
-        cfg.ern_cluster, ...
-        'ranova', table({'flanker'; 'nonflanker'; 'flanker'; 'nonflanker'}, ...
-                       {'social'; 'social'; 'nonsocial'; 'nonsocial'}, ...
-                       'VariableNames', {'error_type', 'social_condition'}));
-    
-    %% 3b. pe analysis - visible  
-    fprintf('analyzing pe component (200-500ms)...\n');
-    
-    % run testing_meanAmplitude for pe
-    testing_meanAmplitude(diff_waves_dir, ...
-        visible_files, ...
-        visible_labels, ...
-        fullfile(cfg.output_path, 'tables', 'visible-target', 'pe'), ...
-        cfg.pe_window, ...
-        cfg.pe_cluster, ...
-        'ranova', table({'flanker'; 'nonflanker'; 'flanker'; 'nonflanker'}, ...
-                       {'social'; 'social'; 'nonsocial'; 'nonsocial'}, ...
-                       'VariableNames', {'error_type', 'social_condition'}));
-    
-    %% 3c. visualization - visible
-    if cfg.generate_plots
-        fprintf('generating erp waveform plots...\n');
-        
-        % plot ern difference waves
-        visual_comperp(visible_files, diff_waves_dir, ...
-            'electrodeCluster', cfg.ern_cluster);
-        title('ERN - Visible Condition');
+% social-NFE p = 0.275 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_113_social_vis_NFE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_NFE', 'Soc_Corr'}, ...
+    'visible_soc_NFE_ERN_detection', [0 100], ern_cluster);
 
-        pimpfigure('ERP', ...
-            [-200 600 -2 3], ...  % adjust y-limits based on your data
-            {'b' 'b:' 'r' 'r:'}, ...  % blue solid/dotted for social, red for nonsocial
-            {'Social FE', 'Social NFE', 'Nonsocial FE', 'Nonsocial NFE'}, ...
-            cfg.ern_window);  % highlight ern analysis window
+% nonsocial-FE p = 0.591 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_212_nonsoc_vis_FE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_FE', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_FE_ERN_detection', [0 100], ern_cluster);
 
-        % visual_comperp({'alt_grandAVG_CorrSilentInc' 'alt_grandAVG_CorrNoiseInc' 'alt_grandAVG_ErrSilentInc' 'alt_grandAVG_ErrNoiseInc' },folder,'channels',1:64);
-        % pimpfigure('ERP', [-100 600 -1 19], {'1' '1:' '2' '2:'}, {'Correct Silent' 'Correct Noisy' 'Error Silent' 'Error Noisy'}, [0 100], [correct; error;]);
+% nonsocial-NFE p = 0.865 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_213_nonsoc_vis_NFE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_NFE', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_NFE_ERN_detection', [0 100], ern_cluster);
 
-        % plot pe difference waves
-        visual_comperp(visible_files, diff_waves_dir, ...
-            'electrodeCluster', cfg.pe_cluster, ...
-            'lowpass', cfg.lowpass_filter);
-        title('Pe - Visible Condition');
-    end
-    
-    fprintf('\nvisible condition analyses complete\n\n');
-end
+%% delta-ERN ANOVA (error type × social condition) → no interaction, no error type effect, social condition effect p = .005
+design = table({'FE'; 'FE'; 'NFE'; 'NFE'}, ...
+    {'social'; 'nonsocial'; 'social'; 'nonsocial'}, ...
+    'VariableNames', {'ErrorType', 'SocialCondition'});
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_vis_FE', 'diffWave_nonsoc_vis_FE', ...
+     'diffWave_soc_vis_NFE', 'diffWave_nonsoc_vis_NFE'}, ...
+    {'Soc_FE', 'Nonsoc_FE', 'Soc_NFE', 'Nonsoc_NFE'}, ...
+    'visible_deltaERN_ANOVA', [0 100], ern_cluster, ...
+    'ranova', design);
 
-%% 4. invisible condition analyses
-if cfg.run_invisible
-    fprintf('=== INVISIBLE CONDITION ANALYSES ===\n\n');
-    
-    % define files for invisible condition (all underscores)
-    invisible_files = {
-        'diffWave_soc_invis_FE',     % social flanker error
-        'diffWave_soc_invis_NFG',    % social non-flanker guess
-        'diffWave_nonsoc_invis_FE',  % nonsocial flanker error
-        'diffWave_nonsoc_invis_NFG'  % nonsocial non-flanker guess
-    };
-    
-    % labels for output
-    invisible_labels = {
-        'soc_FE',
-        'soc_NFG',
-        'nonsoc_FE', 
-        'nonsoc_NFG'
-    };
-    
-    %% 4a. ern analysis - invisible
-    fprintf('analyzing ern component (0-100ms)...\n');
-    
-    % run testing_meanAmplitude for ern
-    testing_meanAmplitude(diff_waves_dir, ...
-        invisible_files, ...
-        invisible_labels, ...
-        fullfile(cfg.output_path, 'tables', 'invisible-target', 'ern'), ...
-        cfg.ern_window, ...
-        cfg.ern_cluster, ...
-        'ranova', table({'flanker_error'; 'nonflanker_guess'; 'flanker_error'; 'nonflanker_guess'}, ...
-                       {'social'; 'social'; 'nonsocial'; 'nonsocial'}, ...
-                       'VariableNames', {'response_type', 'social_condition'}));
-    
-    %% 4b. pe analysis - invisible
-    fprintf('analyzing pe component (200-500ms)...\n');
-    
-    % run testing_meanAmplitude for pe
-    testing_meanAmplitude(diff_waves_dir, ...
-        invisible_files, ...
-        invisible_labels, ...
-        fullfile(cfg.output_path, 'tables', 'invisible-target', 'pe'), ...
-        cfg.pe_window, ...
-        cfg.pe_cluster, ...
-        'ranova', table({'flanker_error'; 'nonflanker_guess'; 'flanker_error'; 'nonflanker_guess'}, ...
-                       {'social'; 'social'; 'nonsocial'; 'nonsocial'}, ...
-                       'VariableNames', {'response_type', 'social_condition'}));
-    
-    %% 4c. visualization - invisible
-    if cfg.generate_plots
-        fprintf('generating erp waveform plots...\n');
-        
-        % plot ern difference waves
-        visual_comperp(invisible_files, diff_waves_dir, ...
-            'electrodeCluster', cfg.ern_cluster, ...
-            'lowpass', cfg.lowpass_filter);
-        title('ERN - Invisible Condition');
-        
-        % plot pe difference waves
-        visual_comperp(invisible_files, diff_waves_dir, ...
-            'electrodeCluster', cfg.pe_cluster, ...
-            'lowpass', cfg.lowpass_filter);
-        title('Pe - Invisible Condition');
-    end
-    
-    fprintf('\ninvisible condition analyses complete\n\n');
-end
+%% Pe - test if detectable
+% social-FE p = 0.028 → DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_112_social_vis_FE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_FE', 'Soc_Corr'}, ...
+    'visible_soc_FE_Pe_detection', [200 500], pe_cluster);
 
-%% 5. finish up
-fprintf('=== ANALYSES COMPLETE ===\n');
-fprintf('results saved to: %s\n', cfg.output_path);
-fprintf('finished: %s\n', datestr(now));
+% social-NFE p = 0.069 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_113_social_vis_NFE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_NFE', 'Soc_Corr'}, ...
+    'visible_soc_NFE_Pe_detection', [200 500], pe_cluster);
 
+% nonsocial-FE p = 0.068 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_212_nonsoc_vis_FE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_FE', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_FE_Pe_detection', [200 500], pe_cluster);
+
+% nonsocial-NFE p = 0.169 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_213_nonsoc_vis_NFE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_NFE', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_NFE_Pe_detection', [200 500], pe_cluster);
+
+%% delta-Pe ANOVA (error type × social condition) → all p > .05
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_vis_FE', 'diffWave_nonsoc_vis_FE', ...
+     'diffWave_soc_vis_NFE', 'diffWave_nonsoc_vis_NFE'}, ...
+    {'Soc_FE', 'Nonsoc_FE', 'Soc_NFE', 'Nonsoc_NFE'}, ...
+    'visible_deltaPe_ANOVA', [200 500], pe_cluster, ...
+    'ranova', design);
+
+%% Additional tests - collapsed errors (FE + NFE combined)
+fprintf('\n--- Collapsed Errors Analysis ---\n');
+
+%% ERN - collapsed errors
+% social collapsed errors p = 0.151 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_110_social_vis_error', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Error_Collapsed', 'Soc_Corr'}, ...
+    'visible_soc_collapsed_ERN_detection', [0 100], ern_cluster);
+
+% nonsocial collapsed errors p = 0.769 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_210_nonsoc_vis_error', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Error_Collapsed', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_collapsed_ERN_detection', [0 100], ern_cluster);
+
+% delta-ERN t-test (social vs nonsocial) → significant: p = .008 
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_vis_error', 'diffWave_nonsoc_vis_error'}, ...
+    {'Soc_Error_Collapsed', 'Nonsoc_Error_Collapsed'}, ...
+    'visible_collapsed_deltaERN_comparison', [0 100], ern_cluster);
+
+%% Pe - collapsed errors
+% social collapsed errors p = 0.013 → DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_110_social_vis_error', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Error_Collapsed', 'Soc_Corr'}, ...
+    'visible_soc_collapsed_Pe_detection', [200 500], pe_cluster);
+
+% nonsocial collapsed errors p = 0.033 → DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_210_nonsoc_vis_error', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Error_Collapsed', 'Nonsoc_Corr'}, ...
+    'visible_nonsoc_collapsed_Pe_detection', [200 500], pe_cluster);
+
+% delta-Pe t-test (social vs nonsocial) → not significant: p = .782
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_vis_error', 'diffWave_nonsoc_vis_error'}, ...
+    {'Soc_Error_Collapsed', 'Nonsoc_Error_Collapsed'}, ...
+    'visible_collapsed_deltaPe_comparison', [200 500], pe_cluster);
+
+%% ========================================================================
+%% INVISIBLE-TARGET
+%% ========================================================================
+fprintf('\n=== INVISIBLE-TARGET ANALYSES ===\n\n');
+
+%% ERN - test if detectable
+% social-FE p = 0.991 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_102_social_invis_FE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Invis_FE', 'Soc_Vis_Corr'}, ...
+    'invisible_soc_FE_ERN_detection', [0 100], ern_cluster);
+
+% social-NFG p = 0.082 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_104_social_invis_NFG', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Invis_NFG', 'Soc_Vis_Corr'}, ...
+    'invisible_soc_NFG_ERN_detection', [0 100], ern_cluster);
+
+% nonsocial-FE p = 0.015 → DETECTABLE (but reversed direction!)
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_202_nonsoc_invis_FE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Invis_FE', 'Nonsoc_Vis_Corr'}, ...
+    'invisible_nonsoc_FE_ERN_detection', [0 100], ern_cluster);
+
+% nonsocial-NFG p = 0.102 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_204_nonsoc_invis_NFG', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Invis_NFG', 'Nonsoc_Vis_Corr'}, ...
+    'invisible_nonsoc_NFG_ERN_detection', [0 100], ern_cluster);
+
+%% delta-ERN ANOVA (response type × social condition) → significant interaction (p = .018), significant ME for social (p = .032), no ME for response type
+design_invis = table({'FE'; 'FE'; 'NFG'; 'NFG'}, ...
+    {'social'; 'nonsocial'; 'social'; 'nonsocial'}, ...
+    'VariableNames', {'ResponseType', 'SocialCondition'});
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_invis_FE', 'diffWave_nonsoc_invis_FE', ...
+     'diffWave_soc_invis_NFG', 'diffWave_nonsoc_invis_NFG'}, ...
+    {'Soc_FE', 'Nonsoc_FE', 'Soc_NFG', 'Nonsoc_NFG'}, ...
+    'invisible_deltaERN_ANOVA', [0 100], ern_cluster, ...
+    'ranova', design_invis);
+
+%% Pe - test if detectable
+% social-FE p = 0.420 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_102_social_invis_FE', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Invis_FE', 'Soc_Vis_Corr'}, ...
+    'invisible_soc_FE_Pe_detection', [200 500], pe_cluster);
+
+% social-NFG p = 0.519 → NOT DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_104_social_invis_NFG', 'grandAVG_111_social_vis_corr'}, ...
+    {'Soc_Invis_NFG', 'Soc_Vis_Corr'}, ...
+    'invisible_soc_NFG_Pe_detection', [200 500], pe_cluster);
+
+% nonsocial-FE p = 0.019 → DETECTABLE
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_202_nonsoc_invis_FE', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Invis_FE', 'Nonsoc_Vis_Corr'}, ...
+    'invisible_nonsoc_FE_Pe_detection', [200 500], pe_cluster);
+
+% nonsocial-NFG p = 0.015 → DETECTABLE 
+testing_meanAmplitude(char(grandAver), ...
+    {'grandAVG_204_nonsoc_invis_NFG', 'grandAVG_211_nonsoc_vis_corr'}, ...
+    {'Nonsoc_Invis_NFG', 'Nonsoc_Vis_Corr'}, ...
+    'invisible_nonsoc_NFG_Pe_detection', [200 500], pe_cluster);
+
+%% delta-Pe ANOVA (response type × social condition) → no significant interaction, significant ME for social (p = .025)
+testing_meanAmplitude(char(diffWaves), ...
+    {'diffWave_soc_invis_FE', 'diffWave_nonsoc_invis_FE', ...
+     'diffWave_soc_invis_NFG', 'diffWave_nonsoc_invis_NFG'}, ...
+    {'Soc_FE', 'Nonsoc_FE', 'Soc_NFG', 'Nonsoc_NFG'}, ...
+    'invisible_deltaPe_ANOVA', [200 500], pe_cluster, ...
+    'ranova', design_invis);
+
+%% ========================================================================
+%% CLEANUP & ORGANIZATION
+%% ========================================================================
+fprintf('\n=== Organizing Output Files ===\n');
+
+% stop diary before moving files
 diary off;
 
+% move visible-target txt files
+visFiles = dir('visible*.txt');
+for i = 1:length(visFiles)
+    movefile(visFiles(i).name, fullfile(visTableDir, visFiles(i).name));
 end
+fprintf('Moved %d visible-target statistics files\n', length(visFiles));
+
+% move invisible-target txt files  
+invisFiles = dir('invisible*.txt');
+for i = 1:length(invisFiles)
+    movefile(invisFiles(i).name, fullfile(invisTableDir, invisFiles(i).name));
+end
+fprintf('Moved %d invisible-target statistics files\n', length(invisFiles));
+
+%% generate html report
+fprintf('\nGenerating HTML report...\n');
+publish('batch_erp_analyses.m', ...
+    'format', 'html', ...
+    'outputDir', reportsDir, ...
+    'evalCode', false);
+
+%% create summary file
+summaryFile = fullfile(outputDir, 'analysis_summary.txt');
+fid = fopen(summaryFile, 'w');
+fprintf(fid, 'SocCEr ERP Analysis Summary\n');
+fprintf(fid, '===========================\n\n');
+fprintf(fid, 'Timestamp: %s\n', timestamp);
+fprintf(fid, 'Script: batch_erp_analyses.m\n');
+fprintf(fid, 'Author: Marlene Buch\n\n');
+fprintf(fid, 'Output Structure:\n');
+fprintf(fid, '  /tables/visible-target/   - %d statistics files\n', length(visFiles));
+fprintf(fid, '  /tables/invisible-target/ - %d statistics files\n', length(invisFiles));
+fprintf(fid, '  /logs/                    - analysis log\n');
+fprintf(fid, '  /reports/                 - HTML report\n\n');
+fprintf(fid, 'Electrode Clusters:\n');
+fprintf(fid, '  ERN: [%s]\n', num2str(ern_cluster));
+fprintf(fid, '  Pe:  [%s]\n', num2str(pe_cluster));
+fclose(fid);
+
+%% final output message
+fprintf('\n========================================\n');
+fprintf('Analysis Complete!\n');
+fprintf('Output saved to:\n%s\n', outputDir);
+fprintf('========================================\n');

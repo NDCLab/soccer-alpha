@@ -53,13 +53,13 @@ visual_comperp({'diffWave_soc_vis_FE', 'diffWave_nonsoc_vis_FE', ...
 pimpfigure('ERP', [-150 400 -2.5 2.5], {'1' '1:' '3' '3:'}, ...
            {'FE social', 'FE nonsocial', 'NFE social', 'NFE nonsocial'}, ...
            [0 100], [vis_FE; vis_FE; vis_NFE; vis_NFE]);
-title('∆ERN - visible-target');
+title('∆ERN - visible-target - difference waves');
 
 % Pe
 pimpfigure('ERP', [-100 600 -3 2], {'1' '1:' '3' '3:'}, ...
            {'FE social', 'FE nonsocial', 'NFE social', 'NFE nonsocial'}, ...
            [200 500], [vis_FE; vis_FE; vis_NFE; vis_NFE]);
-title('∆Pe - visible-target');
+title('∆Pe - visible-target - difference waves');
 
 
 %% additional tests - visible-target - collapsed errors (FE + NFE combined)
@@ -109,13 +109,13 @@ visual_comperp({'grandAVG_111_social_vis_corr', 'grandAVG_211_nonsoc_vis_corr', 
                 char(grandAver));
 
 % ERN
-pimpfigure('ERP', [-150 400 -2.5 1.5], {'1' '1:' '3' '3:' '5' '5:'}, ...
+pimpfigure('ERP', [-150 400 -3.5 1.5], {'1' '1:' '3' '3:' '5' '5:'}, ...
            {'vis-correct social', 'vis-correct nonsocial', 'FE social', 'FE nonsocial', 'NFG social', 'NFG nonsocial'}, ...
            [0 100], [vis_cor; vis_cor; invis_FE; invis_FE; invis_NFG; invis_NFG]);
 title('Ne/ERN - invisible-target - grand averages');
 
 % Pe
-pimpfigure('ERP', [-100 600 -1 2.75], {'1' '1:' '3' '3:' '5' '5:'}, ...
+pimpfigure('ERP', [-100 600 -2 3], {'1' '1:' '3' '3:' '5' '5:'}, ...
            {'vis-correct social', 'vis-correct nonsocial', 'FE social', 'FE nonsocial', 'NFG social', 'NFG nonsocial'}, ...
            [200 500], [vis_cor; vis_cor; invis_FE; invis_FE; invis_NFG; invis_NFG]);
 title('Pe - invisible-target - grand averages');
@@ -124,46 +124,13 @@ title('Pe - invisible-target - grand averages');
 visual_comperp({'diffWave_soc_invis_FE', 'diffWave_nonsoc_invis_FE', ...
                 'diffWave_soc_invis_NFG', 'diffWave_nonsoc_invis_NFG'}, ...
                 char(diffWaves));
-
 % ERN
-pimpfigure('ERP', [-150 400 -1.2 2], {'1' '1:' '3' '3:'}, ...
+pimpfigure('ERP', [-150 400 -3.5 2.5], {'1' '1:' '3' '3:'}, ...
            {'FE social', 'FE nonsocial', 'NFG social', 'NFG nonsocial'}, ...
            [0 100], [invis_FE; invis_FE; invis_NFG; invis_NFG]);
-title('∆ERN - invisible-target');
-
+title('∆ERN - invisible-target - difference waves');
 % Pe
-pimpfigure('ERP', [-100 600 -2.6 1.5], {'1' '1:' '3' '3:'}, ...
+pimpfigure('ERP', [-100 600 -2 3], {'1' '1:' '3' '3:'}, ...
            {'FE social', 'FE nonsocial', 'NFG social', 'NFG nonsocial'}, ...
            [200 500], [invis_FE; invis_FE; invis_NFG; invis_NFG]);
-title('∆Pe - invisible-target');
-
-
-
-
-
-%% MASTER LEGEND
-figure('Position', [100 100 400 300]);
-hold on;
-
-% visible conditions
-plot(NaN, NaN, '-', 'Color', vis_cor/255, 'LineWidth', 4); 
-plot(NaN, NaN, ':', 'Color', vis_cor/255, 'LineWidth', 4);
-plot(NaN, NaN, '-', 'Color', vis_FE/255, 'LineWidth', 4);
-plot(NaN, NaN, ':', 'Color', vis_FE/255, 'LineWidth', 4);
-plot(NaN, NaN, '-', 'Color', vis_NFE/255, 'LineWidth', 4);
-plot(NaN, NaN, ':', 'Color', vis_NFE/255, 'LineWidth', 4);
-plot(NaN, NaN, '-', 'Color', vis_err/255, 'LineWidth', 4);
-plot(NaN, NaN, ':', 'Color', vis_err/255, 'LineWidth', 4);
-
-% invisible conditions
-plot(NaN, NaN, '-', 'Color', invis_NFG/255, 'LineWidth', 4);
-plot(NaN, NaN, ':', 'Color', invis_NFG/255, 'LineWidth', 4);
-
-legend({'Correct (nonsocial)', 'Correct (social)', ...
-        'Flanker Error (nonsocial)', 'Flanker Error (social)', ...
-        'Non-Flanker Error (nonsocial)', 'Non-Flanker Error (social)', ...
-        'Error collapsed (nonsocial)', 'Error collapsed (social)', ...
-        'Non-Flanker Guess (nonsocial)', 'Non-Flanker Guess (social)'}, ...
-        'Location', 'bestoutside', 'FontSize', 12);
-title('Legend - Line Types & Colors');
-axis off;
+title('∆Pe - invisible-target - difference waves');
