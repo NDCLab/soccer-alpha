@@ -31,7 +31,7 @@ fprintf('console output logged to: %s\n', console_log_file);
 fprintf('============================================\n\n');
 
 %% modular execution flags
-run_grand_averages = false;      % step 1: make grand averages
+run_grand_averages = true;      % step 1: make grand averages
 run_difference_waves = true;    % step 2: compute difference waves  
 run_electrode_clusters = false;  % step 3: find electrode clusters
 
@@ -49,12 +49,29 @@ subjects = strcat("sub-", subjects_list); % add 'sub-' prefix
 fprintf('subjects to process: %d total\n', length(subjects));
 
 % trial codes (relevant for analyses only)
-codes = [111, 112, 113, 102, 104, 211, 212, 213, 202, 204]; 
+codes = [111, 112, 113, 102, 104, 211, 212, 213, 202, 204, 110, 210];
 
 % code-to-name mapping for output files
 code_names = containers.Map([111, 112, 113, 102, 104, 211, 212, 213, 202, 204], ...
-    {'social-vis-corr', 'social-vis-FE', 'social-vis-NFE', 'social-invis-FE', 'social-invis-NFG', ...
-     'nonsoc-vis-corr', 'nonsoc-vis-FE', 'nonsoc-vis-NFE', 'nonsoc-invis-FE', 'nonsoc-invis-NFG'});
+    {'social_vis_corr', 'social_vis_FE', 'social_vis_NFE', 'social_invis_FE', 'social_invis_NFG', ...
+     'nonsoc_vis_corr', 'nonsoc_vis_FE', 'nonsoc_vis_NFE', 'nonsoc_invis_FE', 'nonsoc_invis_NFG'});
+
+% define per-code minimum trial thresholds
+min_trials_per_code = struct();
+min_trials_per_code.code_111 = 10;  % social visible correct
+min_trials_per_code.code_110 = 10;  % collapsed social error (will check sum of 112+113)
+min_trials_per_code.code_112 = 6;   % social visible FE
+min_trials_per_code.code_113 = 6;   % social visible NFE
+min_trials_per_code.code_102 = 10;   % social invisible FE  
+min_trials_per_code.code_104 = 10;   % social invisible NFG
+
+min_trials_per_code.code_211 = 10;  % nonsocial visible correct
+min_trials_per_code.code_210 = 10;  % collapsed nonsocial error (will check sum of 212+213)
+min_trials_per_code.code_212 = 6;   % nonsocial visible FE
+min_trials_per_code.code_213 = 6;   % nonsocial visible NFE
+min_trials_per_code.code_202 = 10;   % nonsocial invisible FE
+min_trials_per_code.code_204 = 10;   % nonsocial invisible NFG
+
 
 % inclusion thresholds
 min_epochs_threshold = 10;
@@ -85,16 +102,19 @@ end
 % define difference wave computations
 diff_waves_table = [
     % visible condition: error - correct within social condition
-    112, 111, "diffWave_soc-vis-FE";      % social visible flanker error - correct
+    112, 111, "diffWave_soc_vis_FE";      % social visible flanker error - correct
     113, 111, "diffWave_soc_vis_NFE";     % social visible nonflanker error - correct  
-    212, 211, "diffWave_nonsoc-vis-FE";   % nonsocial visible flanker error - correct
-    213, 211, "diffWave_nonsoc-vis-NFE";  % nonsocial visible nonflanker error - correct
+    212, 211, "diffWave_nonsoc_vis_FE";   % nonsocial visible flanker error - correct
+    213, 211, "diffWave_nonsoc_vis_NFE";  % nonsocial visible nonflanker error - correct
+
+    110, 111, "diffWave_soc_vis_error";      % social visible all errors - correct
+    210, 211, "diffWave_nonsoc_vis_error";   % nonsocial visible all errors - correct
     
     % invisible condition: error/NFG - visible correct
-    102, 111, "diffWave_soc-invis-FE";      % social invisible flanker error - social visible correct
-    104, 111, "diffWave_soc-invis-NFG";     % social invisible NFG - social visible correct  
-    202, 211, "diffWave_nonsoc-invis-FE";   % nonsocial invisible flanker error - nonsocial visible correct
-    204, 211, "diffWave_nonsoc-invis-NFG"   % nonsocial invisible NFG - nonsocial visible correct
+    102, 111, "diffWave_soc_invis_FE";      % social invisible flanker error - social visible correct
+    104, 111, "diffWave_soc_invis_NFG";     % social invisible NFG - social visible correct  
+    202, 211, "diffWave_nonsoc_invis_FE";   % nonsocial invisible flanker error - nonsocial visible correct
+    204, 211, "diffWave_nonsoc_invis_NFG"   % nonsocial invisible NFG - nonsocial visible correct
 ];
 
 fprintf('defined %d difference wave computations\n', size(diff_waves_table, 1));
@@ -146,9 +166,9 @@ if run_grand_averages
     fprintf('\n=== STEP 1: CHECKING INCLUSION & MAKING GRAND AVERAGES ===\n');
     fprintf('processing %d subjects for %d codes\n', length(subjects), length(code_names));
     
-    % function call: 
+    % function call:
     [included_subjects, grand_averages] = make_grand_averages(subjects, ...
-        codes, min_epochs_threshold, min_accuracy_threshold, ...
+        codes, min_trials_per_code, min_accuracy_threshold, ...
         rt_lower_bound, rt_outlier_threshold, save_individual_averages, ...
         processed_data_dir, output_dir);
     

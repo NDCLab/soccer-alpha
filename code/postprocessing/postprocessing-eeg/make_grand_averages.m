@@ -1,4 +1,4 @@
-function [included_subjects, grand_averages] = make_grand_averages(subjects, codes, min_epochs_threshold, min_accuracy_threshold, rt_lower_bound, rt_outlier_threshold, save_individual_averages, processed_data_dir, output_dir)
+function [included_subjects, grand_averages] = make_grand_averages(subjects, codes, min_trials_per_code, min_accuracy_threshold, rt_lower_bound, rt_outlier_threshold, save_individual_averages, processed_data_dir, output_dir)
 % make_grand_averages - create condition-specific grand averages from preprocessed EEG data
 %
 % this function loads preprocessed EEGLAB .set files, checks inclusion criteria,
@@ -7,7 +7,7 @@ function [included_subjects, grand_averages] = make_grand_averages(subjects, cod
 % inputs:
 %   subjects - cell array of subject IDs (e.g., {'sub-390011', 'sub-390012'})
 %   codes - array of behavioral codes to process (e.g., [111, 112, 113, ...])
-%   min_epochs_threshold - minimum epochs per code for inclusion (e.g., 10)
+%   min_trials_per_code - struct with per-code minimum trial thresholds (e.g., min_trials_per_code.code_111 = 10)
 %   min_accuracy_threshold - minimum overall accuracy for inclusion (e.g., 0.6)
 %   rt_lower_bound - minimum RT in ms (set to 0 to disable, e.g., 150)
 %   rt_outlier_threshold - SD threshold for outlier trimming (set to 0 to disable, e.g., 3)
@@ -24,9 +24,10 @@ function [included_subjects, grand_averages] = make_grand_averages(subjects, cod
 fprintf('loading preprocessed EEG data & checking inclusion criteria...\n');
 
 % define code-to-name mapping for output files (sorted by social condition)
-code_names = containers.Map([111, 112, 113, 102, 104, 211, 212, 213, 202, 204], ...
-    {'social-vis-corr', 'social-vis-FE', 'social-vis-NFE', 'social-invis-FE', 'social-invis-NFG', ...
-     'nonsoc-vis-corr', 'nonsoc-vis-FE', 'nonsoc-vis-NFE', 'nonsoc-invis-FE', 'nonsoc-invis-NFG'});
+code_names = containers.Map([111, 112, 113, 102, 104, 211, 212, 213, 202, 204, 110, 210], ...
+    {'social_vis_corr', 'social_vis_FE', 'social_vis_NFE', 'social_invis_FE', 'social_invis_NFG', ...
+     'nonsoc_vis_corr', 'nonsoc_vis_FE', 'nonsoc_vis_NFE', 'nonsoc_invis_FE', 'nonsoc_invis_NFG', ...
+     'social_vis_error', 'nonsoc_vis_error'});
 
 % initialize outputs
 included_subjects = {};
@@ -162,7 +163,15 @@ for subj_idx = 1:length(subjects)
         code = codes(code_idx);
         
         % find epochs for this code
-        epoch_indices = find([subject_EEG.epoch.beh_code] == code);
+        if code == 110
+            % combine trials from codes 112 & 113
+            epoch_indices = find(ismember([subject_EEG.epoch.beh_code], [112, 113]));
+        elseif code == 210
+            % combine trials from codes 212 & 213
+            epoch_indices = find(ismember([subject_EEG.epoch.beh_code], [212, 213]));
+        else
+            epoch_indices = find([subject_EEG.epoch.beh_code] == code);
+        end
         
         if isempty(epoch_indices)
             processing_stats.(subject_clean).(sprintf('code_%d', code)) = struct('original', 0, 'after_rt_min', 0, 'after_outliers', 0, 'final', 0);
@@ -186,8 +195,15 @@ for subj_idx = 1:length(subjects)
             trial_info_strings{end+1} = sprintf('code %d: %d epochs', code, trial_stats.final);
         end
 
-        % check minimum epochs threshold
-        if length(cleaned_epochs) < min_epochs_threshold
+        % check minimum epochs threshold for this specific code
+        code_field = sprintf('code_%d', code);
+        if isfield(min_trials_per_code, code_field)
+            threshold_for_this_code = min_trials_per_code.(code_field);
+        else
+            threshold_for_this_code = 10; % default fallback
+        end
+
+        if length(cleaned_epochs) < threshold_for_this_code
             % check if this is a primary code
             if ismember(code, primary_codes)
                 passes_primary_check = false;
@@ -236,13 +252,22 @@ for subj_idx = 1:length(subjects)
         for code_idx = 1:length(codes)
             code = codes(code_idx);
             code_field = sprintf('code_%d', code);
+
+            % get threshold for this specific code
+            if isfield(min_trials_per_code, code_field)
+                threshold_for_this_code = min_trials_per_code.(code_field);
+            else
+                threshold_for_this_code = 10; % default fallback
+            end
+
             if isfield(processing_stats.(subject_clean), code_field)
-                % check if final count >= threshold
-                if processing_stats.(subject_clean).(code_field).final >= min_epochs_threshold
+                % check if final count >= threshold for this code
+                if processing_stats.(subject_clean).(code_field).final >= threshold_for_this_code
                     subject_code_inclusion(code_idx) = true;
                 end
             end
         end
+
         % store this subject's code inclusion pattern
         condition_inclusion(subject) = subject_code_inclusion;
 
@@ -255,7 +280,15 @@ for subj_idx = 1:length(subjects)
             % check if subject has data for this code
             if isfield(processing_stats.(subject_clean), code_field) && processing_stats.(subject_clean).(code_field).final > 0
                 % find epochs & compute average
-                epoch_indices = find([subject_EEG.epoch.beh_code] == code);
+                if code == 110
+                    % combine trials from codes 112 & 113
+                    epoch_indices = find(ismember([subject_EEG.epoch.beh_code], [112, 113]));
+                elseif code == 210
+                    % combine trials from codes 212 & 213
+                    epoch_indices = find(ismember([subject_EEG.epoch.beh_code], [212, 213]));
+                else
+                    epoch_indices = find([subject_EEG.epoch.beh_code] == code);
+                end
                 [cleaned_epochs, ~] = trim_rt_outliers_with_stats(subject_EEG, epoch_indices, rt_lower_bound, rt_outlier_threshold);
 
                 if ~isempty(cleaned_epochs)
@@ -301,7 +334,11 @@ fprintf(log_fid, '=== GRAND AVERAGES PROCESSING LOG ===\n');
 fprintf(log_fid, 'processing date: %s\n', datestr(now));
 fprintf(log_fid, 'script: make_grand_averages.m\n');
 fprintf(log_fid, 'parameters:\n');
-fprintf(log_fid, '  - min_epochs_threshold: %d\n', min_epochs_threshold);
+fprintf(log_fid, '  - min_trials_per_code: varying by condition\n');
+codes_list = fieldnames(min_trials_per_code);
+for i = 1:length(codes_list)
+    fprintf(log_fid, '    - %s: %d trials\n', codes_list{i}, min_trials_per_code.(codes_list{i}));
+end
 fprintf(log_fid, '  - min_accuracy_threshold: %.2f\n', min_accuracy_threshold);
 fprintf(log_fid, '  - rt_lower_bound: %d ms\n', rt_lower_bound);
 fprintf(log_fid, '  - rt_outlier_threshold: %.1f SD\n', rt_outlier_threshold);
@@ -372,6 +409,8 @@ for code_idx = 1:length(codes)
     fprintf('  stored data from %d subjects\n', num_subjects);
     fprintf(log_fid, '  - subjects contributing: %d\n', num_subjects);
     fprintf(log_fid, '  - subject list: %s\n', strjoin(subjects_for_this_code, ', '));
+    % store which subjects are in this grand average for difference waves
+    grand_averages.subjects_per_code.(code_str) = subjects_for_this_code;
     if ~isempty(subject_indices)
         fprintf(log_fid, '  - data dimensions: [%d channels x %d timepoints x %d subjects]\n', ...
             size(grand_averages.(code_str), 1), size(grand_averages.(code_str), 2), num_subjects);
@@ -432,13 +471,12 @@ fprintf(log_fid, '  - final trials used: %d (%.1f%%)\n', total_trials_final, ...
 fprintf(log_fid, '\n');
 
 %% save grand averages in both formats
-
 fprintf('\nsaving grand averages...\n');
 fprintf(log_fid, '=== FILE OUTPUTS ===\n');
 
 % save .mat file with all data in grand_averages subdirectory
 mat_file = fullfile(grand_avg_dir, 'grand_averages.mat');
-save(mat_file, 'grand_averages', 'included_subjects', 'codes', 'processing_stats', 'condition_inclusion');
+save(mat_file, 'grand_averages', 'included_subjects', 'codes', 'processing_stats', 'condition_inclusion', 'min_trials_per_code');
 fprintf(log_fid, 'saved .mat file: %s\n', mat_file);
 
 % save individual .set/.fdt files for each code in grand_averages subdirectory (quietly)
@@ -448,13 +486,28 @@ for code = codes
     if isfield(grand_averages, code_str)
         % create EEG structure for this code
         code_EEG = eeg_emptyset();
-        code_EEG.data = mean(grand_averages.(code_str), 3); % average across subjects
+        code_EEG.data = grand_averages.(code_str);  % keep 3d structure
+        
+        % add proper dimensions
+        num_subjects = size(grand_averages.(code_str), 3);
+        code_EEG.nbchan = size(grand_averages.(code_str), 1);
+        code_EEG.pnts = size(grand_averages.(code_str), 2);
+        code_EEG.trials = num_subjects;  % number of subjects, NOT 1
+        
+        % create event structure for each subject
+        code_EEG.event = [];
+        for subj = 1:num_subjects
+            code_EEG.event(subj).type = code_str;
+            code_EEG.event(subj).latency = 1;
+            code_EEG.event(subj).epoch = subj;
+            code_EEG.event(subj).trials = subj;
+            code_EEG.event(subj).setname = included_subjects{subj};
+        end
+        
+        % add timing & channel info
         code_EEG.times = grand_averages.times;
         code_EEG.chanlocs = grand_averages.chanlocs;
         code_EEG.srate = grand_averages.srate;
-        code_EEG.nbchan = grand_averages.nbchan;
-        code_EEG.pnts = length(grand_averages.times);
-        code_EEG.trials = 1;
         code_EEG.xmin = grand_averages.times(1) / 1000;
         code_EEG.xmax = grand_averages.times(end) / 1000;
         
@@ -465,7 +518,6 @@ for code = codes
         
         evalc('code_EEG = eeg_checkset(code_EEG);');
         evalc('pop_saveset(code_EEG, ''filename'', [filename ''.set''], ''filepath'', grand_avg_dir);');
-        
         fprintf(log_fid, '  - %s.set/.fdt\n', filename);
     end
 end

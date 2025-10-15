@@ -195,14 +195,29 @@ for i = 1:num_waves
     end
 
     % create EEG structure for this difference wave
-    diff_EEG = eeg_emptyset(); % use eeg_emptyset for proper initialization
-    diff_EEG.data = mean(difference_waves.(field_name), 3); % average across subjects
+    diff_EEG = eeg_emptyset();
+    diff_EEG.data = difference_waves.(field_name);  % keep 3d structure - DON'T AVERAGE!
+
+    % set proper dimensions
+    num_subjects = size(difference_waves.(field_name), 3);
+    diff_EEG.nbchan = size(difference_waves.(field_name), 1);
+    diff_EEG.pnts = size(difference_waves.(field_name), 2);
+    diff_EEG.trials = num_subjects;  % actual number of subjects, NOT 1
+
+    % create event structure for each subject
+    diff_EEG.event = [];
+    for subj = 1:num_subjects
+        diff_EEG.event(subj).type = field_name;
+        diff_EEG.event(subj).latency = 1;
+        diff_EEG.event(subj).epoch = subj;
+        diff_EEG.event(subj).trials = subj;
+        diff_EEG.event(subj).setname = sprintf('subject_%d', subj);  % generic subject names
+    end
+
+    % add timing & channel info
     diff_EEG.times = difference_waves.times;
     diff_EEG.chanlocs = difference_waves.chanlocs;
     diff_EEG.srate = difference_waves.srate;
-    diff_EEG.nbchan = difference_waves.nbchan;
-    diff_EEG.pnts = length(difference_waves.times);
-    diff_EEG.trials = 1;
     diff_EEG.xmin = difference_waves.times(1) / 1000;
     diff_EEG.xmax = difference_waves.times(end) / 1000;
 
