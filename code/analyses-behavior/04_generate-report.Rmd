@@ -1,6 +1,6 @@
 ---
 title: "Behavioral Analyses Report"
-author: "SocCEr Study"
+author: "Marlene Buch"
 date: "`r format(Sys.time(), '%Y-%m-%d %H:%M:%S')`"
 output:
   html_document:

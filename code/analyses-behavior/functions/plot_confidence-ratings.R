@@ -1,5 +1,5 @@
 # plot_confidence-ratings.r - plotting functions for confidence analyses
-# author: [your name]
+# author: marlene buch
 
 # === confidence rating plotting functions ===
 
@@ -8,7 +8,7 @@ plot_confidence_interaction <- function(conf_data, plot_type = "correctness",
   # create interaction plot for confidence ratings
   #
   # inputs:
-  #   conf_data - data with confidence ratings
+  #   conf_data - data with subject-level mean confidence ratings
   #   plot_type - "correctness", "error_type", or "response_type"
   #   save_path - optional path to save plot
   #   title - optional title
@@ -33,12 +33,12 @@ plot_confidence_interaction <- function(conf_data, plot_type = "correctness",
     if (is.null(title)) title <- "Confidence Ratings: Response Type × Social (Invisible)"
   }
   
-  # calculate summary statistics
+  # calculate summary statistics from subject means
   plot_data <- conf_data %>%
     group_by(across(all_of(c(x_var, color_var)))) %>%
     summarise(
-      mean = mean(confidenceRating, na.rm = TRUE),
-      se = sd(confidenceRating, na.rm = TRUE) / sqrt(n()),
+      mean = mean(mean_confidence, na.rm = TRUE),
+      se = sd(mean_confidence, na.rm = TRUE) / sqrt(n()),
       .groups = "drop"
     ) %>%
     mutate(social = factor(social, levels = c("social", "nonsocial")))
@@ -81,17 +81,17 @@ plot_confidence_bars <- function(conf_data, group_var, save_path = NULL, title =
   # create bar plot for confidence ratings
   #
   # inputs:
-  #   conf_data - data with confidence ratings
+  #   conf_data - data with subject-level mean confidence ratings
   #   group_var - variable to group by (e.g., "social", "correctness")
   #   save_path - optional path to save plot
   #   title - optional title
   
-  # calculate summary statistics
+  # calculate summary statistics from subject means
   plot_data <- conf_data %>%
     group_by(across(all_of(group_var))) %>%
     summarise(
-      mean = mean(confidenceRating, na.rm = TRUE),
-      se = sd(confidenceRating, na.rm = TRUE) / sqrt(n()),
+      mean = mean(mean_confidence, na.rm = TRUE),
+      se = sd(mean_confidence, na.rm = TRUE) / sqrt(n()),
       .groups = "drop"
     )
   
@@ -124,4 +124,4 @@ plot_confidence_bars <- function(conf_data, group_var, save_path = NULL, title =
   return(p)
 }
 
-cat("✓ confidence rating plotting functions loaded\n")
+cat("✔ confidence rating plotting functions loaded\n")

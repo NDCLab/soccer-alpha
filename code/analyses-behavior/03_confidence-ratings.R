@@ -1,5 +1,5 @@
 # 03_confidence-ratings.r - error confidence rating analyses
-# author: [your name]
+# author: marlene buch
 
 # this script assumes it's sourced from batch_behavioral-analyses.r
 # with data & directories already loaded
@@ -87,13 +87,18 @@ if (CONFIDENCE_ANALYSES$visible_correctness) {
   # prepare data
   conf_correctness <- prepare_confidence_data(transformed_data, "visible_correctness")
   
-  # calculate descriptives
-  descriptives_correctness <- conf_correctness %>%
+  # step 1: aggregate to subject level
+  subject_means_correctness <- conf_correctness %>%
+    group_by(subject, social, correctness) %>%
+    summarise(mean_confidence = mean(confidenceRating, na.rm = TRUE), .groups = "drop")
+  
+  # step 2: calculate descriptives across subjects
+  descriptives_correctness <- subject_means_correctness %>%
     group_by(social, correctness) %>%
     summarise(
       n = n(),
-      mean = mean(confidenceRating, na.rm = TRUE),
-      sd = sd(confidenceRating, na.rm = TRUE),
+      mean = mean(mean_confidence, na.rm = TRUE),
+      sd = sd(mean_confidence, na.rm = TRUE),
       se = sd / sqrt(n),
       .groups = "drop"
     )
@@ -135,8 +140,7 @@ if (CONFIDENCE_ANALYSES$visible_correctness) {
   
   # create plot
   plot_path <- file.path(confidence_dir, "confidence_visible_correctness.png")
-  plot_confidence_interaction(conf_correctness %>%
-                                mutate(is_error = correctness == "error"),
+  plot_confidence_interaction(subject_means_correctness,
                               plot_type = "correctness",
                               save_path = plot_path)
 }
@@ -161,13 +165,18 @@ if (CONFIDENCE_ANALYSES$visible_error_type) {
   
   # only run if sufficient data
   if (all(cell_counts$n_subjects >= 10)) {
-    # calculate descriptives
-    descriptives_error_type <- conf_error_type %>%
+    # step 1: aggregate to subject level
+    subject_means_error_type <- conf_error_type %>%
+      group_by(subject, social, error_type) %>%
+      summarise(mean_confidence = mean(confidenceRating, na.rm = TRUE), .groups = "drop")
+    
+    # step 2: calculate descriptives across subjects
+    descriptives_error_type <- subject_means_error_type %>%
       group_by(social, error_type) %>%
       summarise(
         n = n(),
-        mean = mean(confidenceRating, na.rm = TRUE),
-        sd = sd(confidenceRating, na.rm = TRUE),
+        mean = mean(mean_confidence, na.rm = TRUE),
+        sd = sd(mean_confidence, na.rm = TRUE),
         se = sd / sqrt(n),
         .groups = "drop"
       )
@@ -209,8 +218,7 @@ if (CONFIDENCE_ANALYSES$visible_error_type) {
     
     # create plot
     plot_path <- file.path(confidence_dir, "confidence_visible_error_type.png")
-    plot_confidence_interaction(conf_error_type %>%
-                                  mutate(is_flanker = error_type == "flanker"),
+    plot_confidence_interaction(subject_means_error_type,
                                 plot_type = "error_type",
                                 save_path = plot_path)
     
@@ -227,13 +235,18 @@ if (CONFIDENCE_ANALYSES$invisible_response_type) {
   # prepare data
   conf_response_type <- prepare_confidence_data(transformed_data, "invisible_response_type")
   
-  # calculate descriptives
-  descriptives_response_type <- conf_response_type %>%
+  # step 1: aggregate to subject level
+  subject_means_response_type <- conf_response_type %>%
+    group_by(subject, social, response_type) %>%
+    summarise(mean_confidence = mean(confidenceRating, na.rm = TRUE), .groups = "drop")
+  
+  # step 2: calculate descriptives across subjects  
+  descriptives_response_type <- subject_means_response_type %>%
     group_by(social, response_type) %>%
     summarise(
       n = n(),
-      mean = mean(confidenceRating, na.rm = TRUE),
-      sd = sd(confidenceRating, na.rm = TRUE),
+      mean = mean(mean_confidence, na.rm = TRUE),
+      sd = sd(mean_confidence, na.rm = TRUE),
       se = sd / sqrt(n),
       .groups = "drop"
     )
@@ -275,8 +288,7 @@ if (CONFIDENCE_ANALYSES$invisible_response_type) {
   
   # create plot
   plot_path <- file.path(confidence_dir, "confidence_invisible_response_type.png")
-  plot_confidence_interaction(conf_response_type %>%
-                                mutate(is_flanker_error = response_type == "flanker_error"),
+  plot_confidence_interaction(subject_means_response_type,
                               plot_type = "response_type",
                               save_path = plot_path)
 }
