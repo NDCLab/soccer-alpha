@@ -3,3 +3,10 @@
 
 # ignore data specific files
 derivatives/*
+results/*
+.Rproj.user
+
+# R files to ignore
+.Rhistory
+.RData
+.Ruserdata
