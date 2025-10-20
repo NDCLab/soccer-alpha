@@ -1,0 +1,632 @@
+[16-Oct-2025 12:41:53]   
+[16-Oct-2025 12:41:53]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:41:53]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:41:53]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:41:53]   
+[16-Oct-2025 12:41:53]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 12:41:53]     Time window: [0 100]
+[16-Oct-2025 12:41:53]     Within-Subjects
+[16-Oct-2025 12:41:53]     ================================
+[16-Oct-2025 12:41:53]     Soc_Error_Collapsed:  M=-0.76209 SD = 1.2629
+[16-Oct-2025 12:41:53]     Soc_Corr:  M=0.53313 SD = 0.92073
+[16-Oct-2025 12:41:53]     ================================
+[16-Oct-2025 12:41:53]        t(25) = -4.4927 , p = 0.00013882 (two-tailed)
+[16-Oct-2025 12:41:53]                     Hedge's g (dependent) = -1.1543
+[16-Oct-2025 12:41:53]   
+[16-Oct-2025 12:42:26]   
+[16-Oct-2025 12:42:26]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:42:26]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:42:26]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:42:26]   
+[16-Oct-2025 12:42:26]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 12:42:26]     Time window: [0 100]
+[16-Oct-2025 12:42:26]     Within-Subjects
+[16-Oct-2025 12:42:26]     ================================
+[16-Oct-2025 12:42:26]     Nonsoc_Error_Collapsed:  M=-0.16334 SD = 1.7153
+[16-Oct-2025 12:42:26]     Nonsoc_Corr:  M=0.55274 SD = 0.93078
+[16-Oct-2025 12:42:26]     ================================
+[16-Oct-2025 12:42:26]        t(25) = -1.8783 , p = 0.072057 (two-tailed)
+[16-Oct-2025 12:42:26]                     Hedge's g (dependent) = -0.51109
+[16-Oct-2025 12:42:26]   
+[16-Oct-2025 12:48:18]   
+[16-Oct-2025 12:48:18]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:48:18]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:48:18]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:48:18]   
+[16-Oct-2025 12:48:18]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 12:48:18]     Time window: [0 100]
+[16-Oct-2025 12:48:18]     Within-Subjects
+[16-Oct-2025 12:48:18]     ================================
+[16-Oct-2025 12:48:18]     Soc_Error_Collapsed:  M=-0.76209 SD = 1.2629
+[16-Oct-2025 12:48:18]     Soc_Corr:  M=0.53313 SD = 0.92073
+[16-Oct-2025 12:48:18]     ================================
+[16-Oct-2025 12:48:18]        t(25) = -4.4927 , p = 0.00013882 (two-tailed)
+[16-Oct-2025 12:48:18]                     Hedge's g (dependent) = -1.1543
+[16-Oct-2025 12:48:18]   
+[16-Oct-2025 12:48:26]   
+[16-Oct-2025 12:48:26]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:48:26]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:48:26]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:48:26]   
+[16-Oct-2025 12:48:26]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 12:48:26]     Time window: [0 100]
+[16-Oct-2025 12:48:26]     Within-Subjects
+[16-Oct-2025 12:48:26]     ================================
+[16-Oct-2025 12:48:26]     Soc_Error_Collapsed:  M=-1.1613 SD = 1.223
+[16-Oct-2025 12:48:26]     Nonsoc_Error_Collapsed:  M=-0.62925 SD = 1.7
+[16-Oct-2025 12:48:26]     ================================
+[16-Oct-2025 12:48:26]        t(25) = -1.7259 , p = 0.096698 (two-tailed)
+[16-Oct-2025 12:48:26]                     Hedge's g (dependent) = -0.3539
+[16-Oct-2025 12:48:26]   
+[16-Oct-2025 12:50:04]   
+[16-Oct-2025 12:50:04]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:50:04]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:50:04]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:50:04]   
+[16-Oct-2025 12:50:04]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 12:50:04]     Time window: [0 100]
+[16-Oct-2025 12:50:04]     Within-Subjects
+[16-Oct-2025 12:50:04]     ================================
+[16-Oct-2025 12:50:04]     Soc_Error_Collapsed:  M=-0.76209 SD = 1.2629
+[16-Oct-2025 12:50:04]     Soc_Corr:  M=0.53313 SD = 0.92073
+[16-Oct-2025 12:50:04]     ================================
+[16-Oct-2025 12:50:04]        t(25) = -4.4927 , p = 0.00013882 (two-tailed)
+[16-Oct-2025 12:50:04]                     Hedge's g (dependent) = -1.1543
+[16-Oct-2025 12:50:04]   
+[16-Oct-2025 12:50:40]   
+[16-Oct-2025 12:50:40]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:50:40]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:50:40]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:50:40]   
+[16-Oct-2025 12:50:40]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 12:50:40]     Time window: [0 100]
+[16-Oct-2025 12:50:40]     Within-Subjects
+[16-Oct-2025 12:50:40]     ================================
+[16-Oct-2025 12:50:40]     Nonsoc_Error_Collapsed:  M=-0.16334 SD = 1.7153
+[16-Oct-2025 12:50:40]     Nonsoc_Corr:  M=0.55274 SD = 0.93078
+[16-Oct-2025 12:50:40]     ================================
+[16-Oct-2025 12:50:40]        t(25) = -1.8783 , p = 0.072057 (two-tailed)
+[16-Oct-2025 12:50:40]                     Hedge's g (dependent) = -0.51109
+[16-Oct-2025 12:50:40]   
+[16-Oct-2025 12:51:13]   
+[16-Oct-2025 12:51:13]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:51:13]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 12:51:13]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 12:51:13]   
+[16-Oct-2025 12:51:13]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 12:51:13]     Time window: [0 100]
+[16-Oct-2025 12:51:13]     Within-Subjects
+[16-Oct-2025 12:51:13]     ================================
+[16-Oct-2025 12:51:13]     Soc_Error_Collapsed:  M=-1.1613 SD = 1.223
+[16-Oct-2025 12:51:13]     Nonsoc_Error_Collapsed:  M=-0.62925 SD = 1.7
+[16-Oct-2025 12:51:13]     ================================
+[16-Oct-2025 12:51:13]        t(25) = -1.7259 , p = 0.096698 (two-tailed)
+[16-Oct-2025 12:51:13]                     Hedge's g (dependent) = -0.3539
+[16-Oct-2025 12:51:13]   
+[16-Oct-2025 13:06:00]   
+[16-Oct-2025 13:06:00]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:06:00]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:06:00]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:06:00]   
+[16-Oct-2025 13:06:00]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:06:00]     Time window: [200 500]
+[16-Oct-2025 13:06:00]     Within-Subjects
+[16-Oct-2025 13:06:00]     ================================
+[16-Oct-2025 13:06:00]     Soc_Error_Collapsed:  M=1.4862 SD = 2.1112
+[16-Oct-2025 13:06:00]     Soc_Corr:  M=-1.2569 SD = 2.3297
+[16-Oct-2025 13:06:00]     ================================
+[16-Oct-2025 13:06:00]        t(25) = 4.8014 , p = 6.234e-05 (two-tailed)
+[16-Oct-2025 13:06:00]                     Hedge's g (dependent) = 1.2153
+[16-Oct-2025 13:06:00]   
+[16-Oct-2025 13:07:25]   
+[16-Oct-2025 13:07:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:07:25]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:07:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:07:25]   
+[16-Oct-2025 13:07:25]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:07:25]     Time window: [200 500]
+[16-Oct-2025 13:07:25]     Within-Subjects
+[16-Oct-2025 13:07:25]     ================================
+[16-Oct-2025 13:07:25]     Nonsoc_Error_Collapsed:  M=1.4042 SD = 1.9835
+[16-Oct-2025 13:07:25]     Nonsoc_Corr:  M=-1.3222 SD = 2.3504
+[16-Oct-2025 13:07:25]     ================================
+[16-Oct-2025 13:07:25]        t(25) = 4.8572 , p = 5.3945e-05 (two-tailed)
+[16-Oct-2025 13:07:25]                     Hedge's g (dependent) = 1.2348
+[16-Oct-2025 13:07:25]   
+[16-Oct-2025 13:08:15]   
+[16-Oct-2025 13:08:15]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:08:15]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:08:15]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:08:15]   
+[16-Oct-2025 13:08:15]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 13:08:15]     Time window: [0 100]
+[16-Oct-2025 13:08:15]     Within-Subjects
+[16-Oct-2025 13:08:15]     ================================
+[16-Oct-2025 13:08:15]     Soc_Error_Collapsed:  M=-1.1613 SD = 1.223
+[16-Oct-2025 13:08:15]     Nonsoc_Error_Collapsed:  M=-0.62925 SD = 1.7
+[16-Oct-2025 13:08:15]     ================================
+[16-Oct-2025 13:08:15]        t(25) = -1.7259 , p = 0.096698 (two-tailed)
+[16-Oct-2025 13:08:15]                     Hedge's g (dependent) = -0.3539
+[16-Oct-2025 13:08:15]   
+[16-Oct-2025 13:13:25]   
+[16-Oct-2025 13:13:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:13:25]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:13:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:13:25]   
+[16-Oct-2025 13:13:25]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 13:13:25]     Time window: [200 500]
+[16-Oct-2025 13:13:25]     Within-Subjects
+[16-Oct-2025 13:13:25]     ================================
+[16-Oct-2025 13:13:25]     Soc_Error_Collapsed:  M=2.3047 SD = 2.4562
+[16-Oct-2025 13:13:25]     Nonsoc_Error_Collapsed:  M=2.4598 SD = 1.8941
+[16-Oct-2025 13:13:25]     ================================
+[16-Oct-2025 13:13:25]        t(25) = -0.27196 , p = 0.78789 (two-tailed)
+[16-Oct-2025 13:13:25]                     Hedge's g (dependent) = -0.069644
+[16-Oct-2025 13:13:25]   
+[16-Oct-2025 13:13:43]   
+[16-Oct-2025 13:13:43]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:13:43]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:13:43]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:13:43]   
+[16-Oct-2025 13:13:43]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 13:13:43]     Time window: [0 100]
+[16-Oct-2025 13:13:43]     Within-Subjects
+[16-Oct-2025 13:13:43]     ================================
+[16-Oct-2025 13:13:43]     Soc_Error_Collapsed:  M=-1.1613 SD = 1.223
+[16-Oct-2025 13:13:43]     Nonsoc_Error_Collapsed:  M=-0.62925 SD = 1.7
+[16-Oct-2025 13:13:43]     ================================
+[16-Oct-2025 13:13:43]        t(25) = -1.7259 , p = 0.096698 (two-tailed)
+[16-Oct-2025 13:13:43]                     Hedge's g (dependent) = -0.3539
+[16-Oct-2025 13:13:43]   
+[16-Oct-2025 13:27:50]   
+[16-Oct-2025 13:27:50]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:27:50]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:27:50]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:27:50]   
+[16-Oct-2025 13:27:50]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:27:50]     Time window: [0 100]
+[16-Oct-2025 13:27:50]     Within-Subjects
+[16-Oct-2025 13:27:50]     ================================
+[16-Oct-2025 13:27:50]     Soc_FE:  M=-0.71945 SD = 1.6646
+[16-Oct-2025 13:27:50]     Soc_Corr:  M=0.53893 SD = 0.93923
+[16-Oct-2025 13:27:50]     ================================
+[16-Oct-2025 13:27:50]        t(24) = -3.4157 , p = 0.0022684 (two-tailed)
+[16-Oct-2025 13:27:50]                     Hedge's g (dependent) = -0.91648
+[16-Oct-2025 13:27:50]   
+[16-Oct-2025 13:28:08]   
+[16-Oct-2025 13:28:08]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:08]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:28:08]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:08]   
+[16-Oct-2025 13:28:08]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:28:08]     Time window: [0 100]
+[16-Oct-2025 13:28:08]     Within-Subjects
+[16-Oct-2025 13:28:08]     ================================
+[16-Oct-2025 13:28:08]     Soc_NFE:  M=-0.81081 SD = 1.8952
+[16-Oct-2025 13:28:08]     Soc_Corr:  M=0.54431 SD = 0.97647
+[16-Oct-2025 13:28:08]     ================================
+[16-Oct-2025 13:28:08]        t(21) = -3.2172 , p = 0.0041348 (two-tailed)
+[16-Oct-2025 13:28:08]                     Hedge's g (dependent) = -0.88274
+[16-Oct-2025 13:28:08]   
+[16-Oct-2025 13:28:35]   
+[16-Oct-2025 13:28:35]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:35]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:28:35]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:35]   
+[16-Oct-2025 13:28:35]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:28:35]     Time window: [0 100]
+[16-Oct-2025 13:28:35]     Within-Subjects
+[16-Oct-2025 13:28:35]     ================================
+[16-Oct-2025 13:28:35]     Nonsoc_FE:  M=0.14759 SD = 2.0285
+[16-Oct-2025 13:28:35]     Nonsoc_Corr:  M=0.55274 SD = 0.93078
+[16-Oct-2025 13:28:35]     ================================
+[16-Oct-2025 13:28:35]        t(25) = -0.9749 , p = 0.33895 (two-tailed)
+[16-Oct-2025 13:28:35]                     Hedge's g (dependent) = -0.25285
+[16-Oct-2025 13:28:35]   
+[16-Oct-2025 13:28:52]   
+[16-Oct-2025 13:28:52]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:52]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:28:52]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:28:52]   
+[16-Oct-2025 13:28:52]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:28:52]     Time window: [0 100]
+[16-Oct-2025 13:28:52]     Within-Subjects
+[16-Oct-2025 13:28:52]     ================================
+[16-Oct-2025 13:28:52]     Nonsoc_NFE:  M=-0.52957 SD = 1.8353
+[16-Oct-2025 13:28:52]     Nonsoc_Corr:  M=0.64232 SD = 0.92801
+[16-Oct-2025 13:28:52]     ================================
+[16-Oct-2025 13:28:52]        t(22) = -2.8773 , p = 0.0087487 (two-tailed)
+[16-Oct-2025 13:28:52]                     Hedge's g (dependent) = -0.79202
+[16-Oct-2025 13:28:52]   
+[16-Oct-2025 13:32:14]   
+[16-Oct-2025 13:32:14]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:32:14]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:32:14]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:32:14]   
+[16-Oct-2025 13:32:14]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:32:14]     Time window: [200 500]
+[16-Oct-2025 13:32:14]     Within-Subjects
+[16-Oct-2025 13:32:14]     ================================
+[16-Oct-2025 13:32:14]     Soc_FE:  M=1.239 SD = 2.2751
+[16-Oct-2025 13:32:14]     Soc_Corr:  M=-1.164 SD = 2.3281
+[16-Oct-2025 13:32:14]     ================================
+[16-Oct-2025 13:32:14]        t(24) = 4.2825 , p = 0.00025747 (two-tailed)
+[16-Oct-2025 13:32:14]                     Hedge's g (dependent) = 1.0276
+[16-Oct-2025 13:32:14]   
+[16-Oct-2025 13:32:42]   
+[16-Oct-2025 13:32:42]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:32:42]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:32:42]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:32:42]   
+[16-Oct-2025 13:32:42]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:32:42]     Time window: [200 500]
+[16-Oct-2025 13:32:42]     Within-Subjects
+[16-Oct-2025 13:32:42]     ================================
+[16-Oct-2025 13:32:42]     Soc_NFE:  M=1.5338 SD = 2.5417
+[16-Oct-2025 13:32:42]     Soc_Corr:  M=-1.3074 SD = 2.4171
+[16-Oct-2025 13:32:42]     ================================
+[16-Oct-2025 13:32:42]        t(21) = 3.5514 , p = 0.0018885 (two-tailed)
+[16-Oct-2025 13:32:42]                     Hedge's g (dependent) = 1.125
+[16-Oct-2025 13:32:42]   
+[16-Oct-2025 13:33:20]   
+[16-Oct-2025 13:33:20]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:33:20]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:33:20]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:33:20]   
+[16-Oct-2025 13:33:20]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:33:20]     Time window: [200 500]
+[16-Oct-2025 13:33:20]     Within-Subjects
+[16-Oct-2025 13:33:20]     ================================
+[16-Oct-2025 13:33:20]     Nonsoc_FE:  M=1.6996 SD = 1.9762
+[16-Oct-2025 13:33:20]     Nonsoc_Corr:  M=-1.3222 SD = 2.3504
+[16-Oct-2025 13:33:20]     ================================
+[16-Oct-2025 13:33:20]        t(25) = 5.2583 , p = 1.9132e-05 (two-tailed)
+[16-Oct-2025 13:33:20]                     Hedge's g (dependent) = 1.3707
+[16-Oct-2025 13:33:20]   
+[16-Oct-2025 13:33:47]   
+[16-Oct-2025 13:33:47]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:33:47]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:33:47]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:33:47]   
+[16-Oct-2025 13:33:47]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:33:47]     Time window: [200 500]
+[16-Oct-2025 13:33:47]     Within-Subjects
+[16-Oct-2025 13:33:47]     ================================
+[16-Oct-2025 13:33:47]     Nonsoc_NFE:  M=0.96982 SD = 2.6094
+[16-Oct-2025 13:33:47]     Nonsoc_Corr:  M=-1.2826 SD = 2.4562
+[16-Oct-2025 13:33:47]     ================================
+[16-Oct-2025 13:33:47]        t(22) = 3.4742 , p = 0.0021531 (two-tailed)
+[16-Oct-2025 13:33:47]                     Hedge's g (dependent) = 0.87366
+[16-Oct-2025 13:33:47]   
+[16-Oct-2025 13:35:31]   
+[16-Oct-2025 13:35:31]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:35:31]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:35:31]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:35:31]   
+[16-Oct-2025 13:35:31]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 13:35:31]     Time window: [200 500]
+[16-Oct-2025 13:35:31]     Within-Subjects
+[16-Oct-2025 13:35:31]     ================================
+[16-Oct-2025 13:35:31]     Soc_Error_Collapsed:  M=2.3047 SD = 2.4562
+[16-Oct-2025 13:35:31]     Nonsoc_Error_Collapsed:  M=2.4598 SD = 1.8941
+[16-Oct-2025 13:35:31]     ================================
+[16-Oct-2025 13:35:31]        t(25) = -0.27196 , p = 0.78789 (two-tailed)
+[16-Oct-2025 13:35:31]                     Hedge's g (dependent) = -0.069644
+[16-Oct-2025 13:35:31]   
+[16-Oct-2025 13:36:11]   
+[16-Oct-2025 13:36:11]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:36:11]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:36:11]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:36:11]   
+[16-Oct-2025 13:36:11]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\difference_waves
+[16-Oct-2025 13:36:11]     Time window: [0 100]
+[16-Oct-2025 13:36:11]     Within-Subjects
+[16-Oct-2025 13:36:11]     ================================
+[16-Oct-2025 13:36:11]     Soc_Error_Collapsed:  M=-1.1613 SD = 1.223
+[16-Oct-2025 13:36:11]     Nonsoc_Error_Collapsed:  M=-0.62925 SD = 1.7
+[16-Oct-2025 13:36:11]     ================================
+[16-Oct-2025 13:36:11]        t(25) = -1.7259 , p = 0.096698 (two-tailed)
+[16-Oct-2025 13:36:11]                     Hedge's g (dependent) = -0.3539
+[16-Oct-2025 13:36:11]   
+[16-Oct-2025 13:37:55]   
+[16-Oct-2025 13:37:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:37:55]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:37:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:37:55]   
+[16-Oct-2025 13:37:55]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:37:55]     Time window: [0 100]
+[16-Oct-2025 13:37:55]     Within-Subjects
+[16-Oct-2025 13:37:55]     ================================
+[16-Oct-2025 13:37:55]     Soc_Invis_FE:  M=0.15242 SD = 1.8435
+[16-Oct-2025 13:37:55]     Soc_Vis_Corr:  M=0.43694 SD = 0.97074
+[16-Oct-2025 13:37:55]     ================================
+[16-Oct-2025 13:37:55]        t(28) = -0.88777 , p = 0.38223 (two-tailed)
+[16-Oct-2025 13:37:55]                     Hedge's g (dependent) = -0.19053
+[16-Oct-2025 13:37:55]   
+[16-Oct-2025 13:46:40]   
+[16-Oct-2025 13:46:40]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:40]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:40]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:40]   
+[16-Oct-2025 13:46:40]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:40]     Time window: [0 100]
+[16-Oct-2025 13:46:40]     Within-Subjects
+[16-Oct-2025 13:46:40]     ================================
+[16-Oct-2025 13:46:40]     Soc_Invis_FE:  M=0.15242 SD = 1.8435
+[16-Oct-2025 13:46:40]     Soc_Vis_Corr:  M=0.43694 SD = 0.97074
+[16-Oct-2025 13:46:40]     ================================
+[16-Oct-2025 13:46:40]        t(28) = -0.88777 , p = 0.38223 (two-tailed)
+[16-Oct-2025 13:46:40]                     Hedge's g (dependent) = -0.19053
+[16-Oct-2025 13:46:40]   
+[16-Oct-2025 13:46:54]   
+[16-Oct-2025 13:46:54]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:54]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:54]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:54]   
+[16-Oct-2025 13:46:54]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:54]     Time window: [0 100]
+[16-Oct-2025 13:46:54]     Within-Subjects
+[16-Oct-2025 13:46:54]     ================================
+[16-Oct-2025 13:46:54]     Soc_Invis_NFG:  M=0.31901 SD = 0.96901
+[16-Oct-2025 13:46:54]     Soc_Vis_Corr:  M=0.43694 SD = 0.97074
+[16-Oct-2025 13:46:54]     ================================
+[16-Oct-2025 13:46:54]        t(28) = -0.64047 , p = 0.52707 (two-tailed)
+[16-Oct-2025 13:46:54]                     Hedge's g (dependent) = -0.11996
+[16-Oct-2025 13:46:54]   
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:55]     Time window: [0 100]
+[16-Oct-2025 13:46:55]     Within-Subjects
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]     Soc_FE:  M=-0.71945 SD = 1.6646
+[16-Oct-2025 13:46:55]     Soc_Corr:  M=0.53893 SD = 0.93923
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]        t(24) = -3.4157 , p = 0.0022684 (two-tailed)
+[16-Oct-2025 13:46:55]                     Hedge's g (dependent) = -0.91648
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:55]     Time window: [0 100]
+[16-Oct-2025 13:46:55]     Within-Subjects
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]     Soc_NFE:  M=-0.81081 SD = 1.8952
+[16-Oct-2025 13:46:55]     Soc_Corr:  M=0.54431 SD = 0.97647
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]        t(21) = -3.2172 , p = 0.0041348 (two-tailed)
+[16-Oct-2025 13:46:55]                     Hedge's g (dependent) = -0.88274
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:55]     Time window: [0 100]
+[16-Oct-2025 13:46:55]     Within-Subjects
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]     Nonsoc_FE:  M=0.14759 SD = 2.0285
+[16-Oct-2025 13:46:55]     Nonsoc_Corr:  M=0.55274 SD = 0.93078
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]        t(25) = -0.9749 , p = 0.33895 (two-tailed)
+[16-Oct-2025 13:46:55]                     Hedge's g (dependent) = -0.25285
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:55]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:55]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:55]     Time window: [0 100]
+[16-Oct-2025 13:46:55]     Within-Subjects
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]     Nonsoc_NFE:  M=-0.52957 SD = 1.8353
+[16-Oct-2025 13:46:55]     Nonsoc_Corr:  M=0.64232 SD = 0.92801
+[16-Oct-2025 13:46:55]     ================================
+[16-Oct-2025 13:46:55]        t(22) = -2.8773 , p = 0.0087487 (two-tailed)
+[16-Oct-2025 13:46:55]                     Hedge's g (dependent) = -0.79202
+[16-Oct-2025 13:46:55]   
+[16-Oct-2025 13:46:56]   
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:57]     Time window: [200 500]
+[16-Oct-2025 13:46:57]     Within-Subjects
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]     Soc_FE:  M=1.239 SD = 2.2751
+[16-Oct-2025 13:46:57]     Soc_Corr:  M=-1.164 SD = 2.3281
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]        t(24) = 4.2825 , p = 0.00025747 (two-tailed)
+[16-Oct-2025 13:46:57]                     Hedge's g (dependent) = 1.0276
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:57]     Time window: [200 500]
+[16-Oct-2025 13:46:57]     Within-Subjects
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]     Soc_NFE:  M=1.5338 SD = 2.5417
+[16-Oct-2025 13:46:57]     Soc_Corr:  M=-1.3074 SD = 2.4171
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]        t(21) = 3.5514 , p = 0.0018885 (two-tailed)
+[16-Oct-2025 13:46:57]                     Hedge's g (dependent) = 1.125
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:57]     Time window: [200 500]
+[16-Oct-2025 13:46:57]     Within-Subjects
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]     Nonsoc_FE:  M=1.6996 SD = 1.9762
+[16-Oct-2025 13:46:57]     Nonsoc_Corr:  M=-1.3222 SD = 2.3504
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]        t(25) = 5.2583 , p = 1.9132e-05 (two-tailed)
+[16-Oct-2025 13:46:57]                     Hedge's g (dependent) = 1.3707
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:57]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:57]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:57]     Time window: [200 500]
+[16-Oct-2025 13:46:57]     Within-Subjects
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]     Nonsoc_NFE:  M=0.96982 SD = 2.6094
+[16-Oct-2025 13:46:57]     Nonsoc_Corr:  M=-1.2826 SD = 2.4562
+[16-Oct-2025 13:46:57]     ================================
+[16-Oct-2025 13:46:57]        t(22) = 3.4742 , p = 0.0021531 (two-tailed)
+[16-Oct-2025 13:46:57]                     Hedge's g (dependent) = 0.87366
+[16-Oct-2025 13:46:57]   
+[16-Oct-2025 13:46:58]   
+[16-Oct-2025 13:46:58]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:58]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:46:58]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:46:58]   
+[16-Oct-2025 13:46:58]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:46:58]     Time window: [0 100]
+[16-Oct-2025 13:46:58]     Within-Subjects
+[16-Oct-2025 13:46:58]     ================================
+[16-Oct-2025 13:46:58]     Soc_Error_Collapsed:  M=-0.76209 SD = 1.2629
+[16-Oct-2025 13:46:58]     Soc_Corr:  M=0.53313 SD = 0.92073
+[16-Oct-2025 13:46:58]     ================================
+[16-Oct-2025 13:46:58]        t(25) = -4.4927 , p = 0.0001388 (two-tailed)
+[16-Oct-2025 13:46:58]                     Hedge's g (dependent) = -1.1543
+[16-Oct-2025 13:46:58]   
+[16-Oct-2025 13:46:58]   
+[16-Oct-2025 13:46:58]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:47:25]   
+[16-Oct-2025 13:47:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:47:25]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:47:25]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:47:25]   
+[16-Oct-2025 13:47:25]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:47:25]     Time window: [0 100]
+[16-Oct-2025 13:47:25]     Within-Subjects
+[16-Oct-2025 13:47:25]     ================================
+[16-Oct-2025 13:47:25]     Soc_Invis_NFG:  M=0.31901 SD = 0.96901
+[16-Oct-2025 13:47:25]     Soc_Vis_Corr:  M=0.43694 SD = 0.97074
+[16-Oct-2025 13:47:26]     ================================
+[16-Oct-2025 13:47:26]        t(28) = -0.64047 , p = 0.52707 (two-tailed)
+[16-Oct-2025 13:47:26]                     Hedge's g (dependent) = -0.11996
+[16-Oct-2025 13:47:26]   
+[16-Oct-2025 13:47:43]   
+[16-Oct-2025 13:47:43]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:47:43]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:47:43]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:47:43]   
+[16-Oct-2025 13:47:43]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:47:43]     Time window: [0 100]
+[16-Oct-2025 13:47:43]     Within-Subjects
+[16-Oct-2025 13:47:43]     ================================
+[16-Oct-2025 13:47:43]     Nonsoc_Invis_FE:  M=-0.010878 SD = 1.3908
+[16-Oct-2025 13:47:43]     Nonsoc_Vis_Corr:  M=0.43553 SD = 1.0143
+[16-Oct-2025 13:47:43]     ================================
+[16-Oct-2025 13:47:43]        t(28) = -1.8948 , p = 0.068494 (two-tailed)
+[16-Oct-2025 13:47:43]                     Hedge's g (dependent) = -0.36182
+[16-Oct-2025 13:47:43]   
+[16-Oct-2025 13:48:01]   
+[16-Oct-2025 13:48:01]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:48:01]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:48:01]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:48:01]   
+[16-Oct-2025 13:48:01]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:48:01]     Time window: [0 100]
+[16-Oct-2025 13:48:01]     Within-Subjects
+[16-Oct-2025 13:48:01]     ================================
+[16-Oct-2025 13:48:01]     Nonsoc_Invis_NFG:  M=-0.0066915 SD = 1.118
+[16-Oct-2025 13:48:01]     Nonsoc_Vis_Corr:  M=0.43553 SD = 1.0143
+[16-Oct-2025 13:48:01]     ================================
+[16-Oct-2025 13:48:01]        t(28) = -2.5026 , p = 0.018439 (two-tailed)
+[16-Oct-2025 13:48:01]                     Hedge's g (dependent) = -0.40873
+[16-Oct-2025 13:48:01]   
+[16-Oct-2025 13:50:22]   
+[16-Oct-2025 13:50:22]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:50:22]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:50:22]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:50:22]   
+[16-Oct-2025 13:50:22]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:50:22]     Time window: [200 500]
+[16-Oct-2025 13:50:22]     Within-Subjects
+[16-Oct-2025 13:50:22]     ================================
+[16-Oct-2025 13:50:22]     Soc_Invis_FE:  M=0.89747 SD = 2.1775
+[16-Oct-2025 13:50:22]     Soc_Vis_Corr:  M=-1.1614 SD = 2.3004
+[16-Oct-2025 13:50:22]     ================================
+[16-Oct-2025 13:50:22]        t(28) = 3.6587 , p = 0.0010408 (two-tailed)
+[16-Oct-2025 13:50:22]                     Hedge's g (dependent) = 0.90683
+[16-Oct-2025 13:50:22]   
+[16-Oct-2025 13:51:04]   
+[16-Oct-2025 13:51:04]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:51:04]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:51:04]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:51:04]   
+[16-Oct-2025 13:51:04]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:51:04]     Time window: [200 500]
+[16-Oct-2025 13:51:04]     Within-Subjects
+[16-Oct-2025 13:51:04]     ================================
+[16-Oct-2025 13:51:04]     Soc_Invis_NFG:  M=0.15991 SD = 2.0991
+[16-Oct-2025 13:51:04]     Soc_Vis_Corr:  M=-1.1614 SD = 2.3004
+[16-Oct-2025 13:51:04]     ================================
+[16-Oct-2025 13:51:04]        t(28) = 4.0522 , p = 0.00036528 (two-tailed)
+[16-Oct-2025 13:51:04]                     Hedge's g (dependent) = 0.59195
+[16-Oct-2025 13:51:04]   
+[16-Oct-2025 13:52:29]   
+[16-Oct-2025 13:52:29]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:52:29]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:52:29]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:52:29]   
+[16-Oct-2025 13:52:29]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:52:29]     Time window: [200 500]
+[16-Oct-2025 13:52:29]     Within-Subjects
+[16-Oct-2025 13:52:29]     ================================
+[16-Oct-2025 13:52:29]     Soc_Invis_FE:  M=0.89747 SD = 2.1775
+[16-Oct-2025 13:52:29]     Soc_Vis_Corr:  M=-1.1614 SD = 2.3004
+[16-Oct-2025 13:52:29]     ================================
+[16-Oct-2025 13:52:29]        t(28) = 3.6587 , p = 0.0010408 (two-tailed)
+[16-Oct-2025 13:52:29]                     Hedge's g (dependent) = 0.90683
+[16-Oct-2025 13:52:29]   
+[16-Oct-2025 13:52:54]   
+[16-Oct-2025 13:52:54]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:52:54]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:52:54]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:52:54]   
+[16-Oct-2025 13:52:54]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:52:54]     Time window: [200 500]
+[16-Oct-2025 13:52:54]     Within-Subjects
+[16-Oct-2025 13:52:54]     ================================
+[16-Oct-2025 13:52:54]     Nonsoc_Invis_FE:  M=0.98599 SD = 2.2223
+[16-Oct-2025 13:52:54]     Nonsoc_Vis_Corr:  M=-1.3154 SD = 2.3252
+[16-Oct-2025 13:52:54]     ================================
+[16-Oct-2025 13:52:54]        t(28) = 5.4342 , p = 8.4747e-06 (two-tailed)
+[16-Oct-2025 13:52:54]                     Hedge's g (dependent) = 0.99825
+[16-Oct-2025 13:52:54]   
+[16-Oct-2025 13:53:15]   
+[16-Oct-2025 13:53:15]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:53:15]  %  RESULTS OF PAIRED T-TEST  %
+[16-Oct-2025 13:53:15]  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[16-Oct-2025 13:53:15]   
+[16-Oct-2025 13:53:15]     Folder: C:\Users\localadmin\Documents\08_SocCEr\soccer-alpha\derivatives\2025-10-16_erp-postprocessing-baselined\grand_averages
+[16-Oct-2025 13:53:15]     Time window: [200 500]
+[16-Oct-2025 13:53:15]     Within-Subjects
+[16-Oct-2025 13:53:15]     ================================
+[16-Oct-2025 13:53:15]     Nonsoc_Invis_NFG:  M=0.22006 SD = 1.788
+[16-Oct-2025 13:53:15]     Nonsoc_Vis_Corr:  M=-1.3154 SD = 2.3252
+[16-Oct-2025 13:53:15]     ================================
+[16-Oct-2025 13:53:15]        t(28) = 5.7704 , p = 3.4004e-06 (two-tailed)
+[16-Oct-2025 13:53:15]                     Hedge's g (dependent) = 0.73033
+[16-Oct-2025 13:53:15]   

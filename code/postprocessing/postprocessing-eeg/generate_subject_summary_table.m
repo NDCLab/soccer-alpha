@@ -16,10 +16,12 @@ fprintf('\n=== GENERATING SUBJECT SUMMARY TABLE ===\n');
 table_file = fullfile(output_dir, sprintf('subject_summary_table_%s.txt', datestr(now, 'yyyy-mm-dd_HH-MM-SS')));
 fid = fopen(table_file, 'w');
 
-% write header row (tab-separated, matching exact google doc format)
-fprintf(fid, 'ID\tStatus\tExclusion Reason\tOverall Accuracy\tTotal Epochs Loaded\t');
-fprintf(fid, 'Multiple Key (nr)\tMultiple Key (%%)\t');
+% write header row (tab-separated)
+fprintf(fid, 'ID\tStatus\tExclusion Reason\t');
+fprintf(fid, 'Total Beh Trials\t');
 fprintf(fid, 'Too Slow (nr)\tToo Slow (%%)\t');
+fprintf(fid, 'Overall Accuracy\tTotal Epochs Loaded\t');
+fprintf(fid, 'Multiple Key (nr)\tMultiple Key (%%)\t');
 fprintf(fid, 'RT Min Removed (nr)\tRT Min Removed (%%)\t');
 fprintf(fid, 'RT Outliers Removed (nr)\tRT Outliers Removed (%%)\t');
 fprintf(fid, 'Total Usable Epochs\t');
@@ -51,10 +53,22 @@ for subj_idx = 1:length(all_subjects)
     % extract basic info
     overall_acc = stats.overall_accuracy * 100;
 
+    % get total behavioral trials & excluded trial counts
+    if isfield(stats, 'total_beh_trials')
+        total_beh_trials = stats.total_beh_trials;
+    else
+        total_beh_trials = 0;  % fallback if missing
+    end
+
     % get total raw epochs & excluded trial counts
     total_epochs_raw = stats.total_epochs_raw;
     multiple_key_trials = stats.multiple_key_trials;
     too_slow_trials = stats.too_slow_trials;
+
+    % warning check if incomplete behavioral data
+    if total_beh_trials ~= 864 && total_beh_trials > 0
+        fprintf('WARNING: %s has %d behavioral trials, expected 864\n', subject_id, total_beh_trials);
+    end
 
     % calculate total epochs loaded (sum of original across all analyzed codes)
     total_epochs = 0;
@@ -98,9 +112,16 @@ for subj_idx = 1:length(all_subjects)
         end
     end
 
-    % calculate removal percentages (denominator: total raw epochs)
+    % calculate removal percentages
+    % use total_beh_trials as denominator for too-slow percentage
+    if total_beh_trials > 0
+        too_slow_pct = (too_slow_trials / total_beh_trials) * 100;
+    else
+        too_slow_pct = 0;
+    end
+
+    % use total_epochs_raw as denominator for EEG-based exclusions
     multiple_key_pct = (multiple_key_trials / total_epochs_raw) * 100;
-    too_slow_pct = (too_slow_trials / total_epochs_raw) * 100;
     rt_min_removal_pct = (total_rt_min_removed / total_epochs_raw) * 100;
     outlier_removal_pct = (total_outliers_removed / total_epochs_raw) * 100;
 
@@ -149,36 +170,34 @@ for subj_idx = 1:length(all_subjects)
             end
         end
     end
+
+    fprintf(fid, '%d\t', total_beh_trials);
+    fprintf(fid, '%d\t', too_slow_trials);
+    fprintf(fid, '%.2f%%\t', too_slow_pct);
     fprintf(fid, '%.1f%% (%d/%d)\t', overall_acc, round(overall_acc * total_epochs / 100), total_epochs);
     fprintf(fid, '%d\t', total_epochs_raw);
-
     % write exclusion statistics
     fprintf(fid, '%d\t', multiple_key_trials);
     fprintf(fid, '%.2f%%\t', multiple_key_pct);
-    fprintf(fid, '%d\t', too_slow_trials);
-    fprintf(fid, '%.2f%%\t', too_slow_pct);
-
     % write removal statistics
     fprintf(fid, '%d\t', total_rt_min_removed);
     fprintf(fid, '%.2f%%\t', rt_min_removal_pct);
     fprintf(fid, '%d\t', total_outliers_removed);
     fprintf(fid, '%.2f%%\t', outlier_removal_pct);
     fprintf(fid, '%d\t', total_usable);
-
     % write code counts in table order with sum columns inserted
-    fprintf(fid, '%d\t', code_data.code_111.final);  % 111
-    fprintf(fid, '%d\t', code_data.code_112.final);  % 112
-    fprintf(fid, '%d\t', code_data.code_113.final);  % 113
-    fprintf(fid, '%d\t', soc_vis_err);  % sum soc-vis-err
-    fprintf(fid, '%d\t', code_data.code_102.final);  % 102
-    fprintf(fid, '%d\t', code_data.code_104.final);  % 104
-    fprintf(fid, '%d\t', code_data.code_211.final);  % 211
-    fprintf(fid, '%d\t', code_data.code_212.final);  % 212
-    fprintf(fid, '%d\t', code_data.code_213.final);  % 213
-    fprintf(fid, '%d\t', nonsoc_vis_err);  % sum nonsoc-vis-err
-    fprintf(fid, '%d\t', code_data.code_202.final);  % 202
-    fprintf(fid, '%d\t', code_data.code_204.final);  % 204
-
+    fprintf(fid, '%d\t', code_data.code_111.final); % 111
+    fprintf(fid, '%d\t', code_data.code_112.final); % 112
+    fprintf(fid, '%d\t', code_data.code_113.final); % 113
+    fprintf(fid, '%d\t', soc_vis_err); % sum soc-vis-err
+    fprintf(fid, '%d\t', code_data.code_102.final); % 102
+    fprintf(fid, '%d\t', code_data.code_104.final); % 104
+    fprintf(fid, '%d\t', code_data.code_211.final); % 211
+    fprintf(fid, '%d\t', code_data.code_212.final); % 212
+    fprintf(fid, '%d\t', code_data.code_213.final); % 213
+    fprintf(fid, '%d\t', nonsoc_vis_err); % sum nonsoc-vis-err
+    fprintf(fid, '%d\t', code_data.code_202.final); % 202
+    fprintf(fid, '%d\t', code_data.code_204.final); % 204
     % write lowest trial count
     fprintf(fid, '%d\n', lowest_trial_count);
 end

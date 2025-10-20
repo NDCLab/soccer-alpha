@@ -93,6 +93,36 @@ for subj_idx = 1:length(subjects)
         fprintf('ERROR loading %s: %s\n', subject, ME.message);
         continue;
     end
+
+    % construct path to behavioral csv
+    beh_file = fullfile(fileparts(fileparts(processed_data_dir)), 's1_r1', 'behavior', subject, sprintf('%s_soccer-test_psychopy_s1_r1_e1_clean.csv', subject));
+
+    total_beh_trials = 0;
+    actual_too_slow_count = 0;
+
+    if exist(beh_file, 'file')
+        try
+            beh_data = readtable(beh_file);
+            total_beh_trials = height(beh_data);
+
+            % check for expected trial count
+            if total_beh_trials ~= 864
+                fprintf('WARNING: %s has %d behavioral trials, expected 864\n', subject, total_beh_trials);
+            end
+
+            % count too-slow trials (responseType == 8)
+            if ismember('responseType', beh_data.Properties.VariableNames)
+                actual_too_slow_count = sum(beh_data.responseType == 8);
+                fprintf('  behavioral data: %d total trials, %d too-slow trials\n', total_beh_trials, actual_too_slow_count);
+            else
+                fprintf('WARNING: responseType column not found in behavioral data\n');
+            end
+        catch ME
+            fprintf('WARNING: could not read behavioral file: %s\n', ME.message);
+        end
+    else
+        fprintf('WARNING: behavioral file not found: %s\n', beh_file);
+    end
     
     % process each code for this subject
     subject_clean = strrep(subject, '-', '_'); % for struct field names
@@ -100,14 +130,15 @@ for subj_idx = 1:length(subjects)
     % count excluded trial types (responseType 7 & 8)
     all_response_types = [subject_EEG.epoch.trial_responseType];
     multiple_key_count = sum(all_response_types == 7);
-    too_slow_count = sum(all_response_types == 8);
+    too_slow_count = sum(all_response_types == 8);  % note: too-slow trials are not epoched, this will always be 0
 
     % store in processing_stats
     processing_stats.(subject_clean).multiple_key_trials = multiple_key_count;
-    processing_stats.(subject_clean).too_slow_trials = too_slow_count;
+    processing_stats.(subject_clean).too_slow_trials = actual_too_slow_count;  % use actual count from behavioral data
+    processing_stats.(subject_clean).total_beh_trials = total_beh_trials;
     processing_stats.(subject_clean).total_epochs_raw = subject_EEG.trials;
 
-    fprintf('  excluded trials: %d multiple key, %d too slow\n', multiple_key_count, too_slow_count);
+    fprintf('  excluded trials: %d multiple key, %d too slow (from behavioral data)\n', multiple_key_count, actual_too_slow_count);
 
     % calculate overall accuracy for inclusion check
     all_codes_in_data = [subject_EEG.epoch.beh_code];
