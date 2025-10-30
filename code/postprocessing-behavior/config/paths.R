@@ -6,7 +6,7 @@ library(stringr)
 
 # read link to preprocessed data (same file used by matlab)
 # here() gives us the r project root, need to go up to repo root
-repo_root <- file.path(here(), "..", "..", "..")
+repo_root <- file.path(here(), "..", "..")
 preprocessed_link <- file.path(repo_root, "input", "preprocessed")
 preprocessed_path <- readLines(preprocessed_link, warn = FALSE) %>% str_trim()
 
